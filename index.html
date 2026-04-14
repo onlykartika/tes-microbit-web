@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IoT Nexus - Aesthetic Edition</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap');
+
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.45);
+            --glass-card: rgba(255, 255, 255, 0.65);
+            --glass-border: rgba(255, 255, 255, 0.8);
+            --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+            --text-dark: #1d1d1f;
+            --text-gray: #515154;
+            --accent-blue: #0071e3;
+            --accent-hover: #0077ED;
+            --danger: #ff3b30;
+            --success: #34c759;
+            --warning: #ff9500;
+            --card-radius: 24px;
+            --btn-radius: 14px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Poppins', -apple-system, sans-serif;
+            display: flex; flex-direction: column; align-items: center;
+            min-height: 100vh; color: var(--text-dark);
+            background: linear-gradient(-45deg, #ffb6ff, #b3c5ff, #b4ffd8, #ffdfb6);
+            background-size: 400% 400%; animation: auroraBG 15s ease infinite;
+            background-attachment: fixed; padding: 40px 20px; overflow-x: hidden;
+        }
+
+        @keyframes auroraBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Status Pills */
+        .status-container {
+            position: fixed; top: 30px; right: 30px;
+            display: flex; flex-direction: column; gap: 12px; z-index: 1000;
+        }
+        .status-badge {
+            background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border); color: var(--text-gray);
+            padding: 8px 20px; border-radius: 30px; font-size: 13px; font-weight: 600;
+            display: flex; align-items: center; gap: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+
+        /* Main Container */
+        .container {
+            width: 100%; max-width: 1200px; background: var(--glass-bg);
+            backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+            border: 1px solid var(--glass-border); border-radius: 32px;
+            padding: 40px 50px; box-shadow: var(--glass-shadow); margin-bottom: 30px;
+        }
+
+        h1 { margin-top: 0; font-size: 2.8em; font-weight: 800; letter-spacing: -1.5px; margin-bottom: 40px; text-align: center; color: var(--text-dark); }
+        h2 { font-size: 1.2em; font-weight: 700; margin-bottom: 20px; color: var(--text-dark); display: flex; align-items: center; gap: 10px; text-transform: uppercase; letter-spacing: 0.5px;}
+        h3.section-title { font-size: 1.4em; font-weight: 700; margin: 40px 0 20px 0; padding-bottom: 10px; border-bottom: 2px solid rgba(255,255,255,0.5); }
+        
+        .section {
+            background: var(--glass-card); border: 1px solid rgba(255, 255, 255, 0.8);
+            border-radius: var(--card-radius); padding: 30px; margin-bottom: 30px;
+            transition: all 0.3s ease; box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+        }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; }
+
+        /* Form Elements */
+        label { display: block; font-weight: 600; font-size: 0.8em; color: var(--text-gray); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+        input, select {
+            width: 100%; padding: 14px 20px; margin-bottom: 20px;
+            border: 2px solid rgba(255,255,255,0.5); border-radius: var(--btn-radius);
+            font-family: 'Poppins', sans-serif; font-size: 0.95em; color: var(--text-dark);
+            background: rgba(255, 255, 255, 0.5); box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+            transition: all 0.3s ease; outline: none; font-weight: 500;
+        }
+        input:focus, select:focus { background: #ffffff; border-color: var(--accent-blue); box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.15); }
+
+        /* Buttons */
+        button {
+            background: var(--text-dark); color: white; border: none; padding: 14px 24px;
+            border-radius: var(--btn-radius); cursor: pointer; font-weight: 600; font-family: inherit;
+            font-size: 0.95em; transition: all 0.3s ease; display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+        }
+        button:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.15); }
+        button:disabled { background: #ccc; cursor: not-allowed; transform: none; box-shadow: none; }
+        .btn-blue { background: var(--accent-blue); }
+        .btn-blue:hover { background: var(--accent-hover); }
+        .btn-danger { background: var(--danger); }
+        .btn-icon { background: transparent; color: var(--text-gray); padding: 5px; box-shadow: none; font-size: 1.1em;}
+        .btn-icon:hover { background: rgba(0,0,0,0.05); color: var(--text-dark); transform: scale(1.1); }
+
+        /* Widgets Components */
+        .widget-card {
+            background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(10px);
+            border: 1px solid #ffffff; padding: 25px; border-radius: var(--card-radius);
+            text-align: center; display: flex; flex-direction: column; align-items: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.04); transition: all 0.4s ease; position: relative;
+        }
+        .widget-card:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.08); background: rgba(255,255,255,0.9);}
+        
+        .widget-actions { position: absolute; top: 15px; right: 15px; display: flex; gap: 5px; opacity: 0; transition: opacity 0.3s; }
+        .widget-card:hover .widget-actions { opacity: 1; }
+        
+        .widget-title { margin: 0; font-size: 1.1em; font-weight: 700; color: var(--text-dark); text-transform: uppercase; letter-spacing: 0.5px;}
+        .widget-unit { font-size: 0.75em; font-weight: 600; color: var(--text-gray); margin-left: 5px; }
+        .widget-value {
+            font-size: 42px; font-weight: 800; margin: 10px 0; letter-spacing: -1.5px;
+            background: linear-gradient(135deg, var(--accent-blue), #4facfe); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+
+        /* Switch */
+        .switch { position: relative; display: inline-block; width: 60px; height: 34px; margin: 15px 0; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0,0,0,0.1); transition: .4s; border-radius: 34px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);}
+        .slider:before { position: absolute; content: ""; height: 26px; width: 26px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        input:checked + .slider { background-color: var(--success); }
+        input:checked + .slider:before { transform: translateX(26px); }
+
+        /* Custom Range Slider */
+        input[type=range] { -webkit-appearance: none; width: 100%; background: transparent; margin: 15px 0; padding: 0; box-shadow: none; border: none; }
+        input[type=range]:focus { outline: none; background: transparent; box-shadow: none; }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%; height: 8px; cursor: pointer; background: rgba(0,0,0,0.1); border-radius: 4px; border: 1px solid rgba(255,255,255,0.5); box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+        }
+        input[type=range]::-webkit-slider-thumb {
+            height: 24px; width: 24px; border-radius: 50%; background: #fff; cursor: pointer;
+            -webkit-appearance: none; margin-top: -9px; box-shadow: 0 2px 6px rgba(0,0,0,0.2); border: 2px solid var(--accent-blue); transition: transform 0.1s;
+        }
+        input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+
+        .chart-container { position: relative; height: 120px; width: 100%; margin-top: 10px; }
+
+        /* Terminal Log */
+        .terminal-section { background: rgba(29, 29, 31, 0.8); backdrop-filter: blur(20px); border-radius: var(--card-radius); padding: 25px; margin-top: 40px; border: 1px solid rgba(255,255,255,0.2); }
+        .terminal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; color: #fff; }
+        .log-panel {
+            height: 200px; overflow-y: auto; font-family: 'JetBrains Mono', monospace;
+            font-size: 13px; color: #a1a1a6; background: rgba(0,0,0,0.4); border-radius: 12px; padding: 15px;
+            box-shadow: inset 0 4px 10px rgba(0,0,0,0.5);
+        }
+        .log-panel::-webkit-scrollbar { width: 6px; }
+        .log-panel::-webkit-scrollbar-thumb { background: var(--accent-blue); border-radius: 6px; }
+        .log-line { margin-bottom: 6px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 4px; }
+        .log-time { color: #86868b; margin-right: 8px; font-size: 0.9em; }
+
+        @media (max-width: 768px) {
+            .grid-2, .grid-3 { grid-template-columns: 1fr; }
+            .container { padding: 30px 20px; border-radius: 24px; }
+            .status-container { top: 15px; right: 15px; transform: scale(0.85); transform-origin: top right;}
+        }
+    </style>
+</head>
+<body>
+
+    <div class="status-container">
+        <div class="status-badge" id="status-bt"><i class="fab fa-bluetooth-b"></i> BT Offline</div>
+        <div class="status-badge" id="status-fb"><i class="fas fa-cloud"></i> DB Offline</div>
+    </div>
+
+    <div class="container">
+        <h1>IoT NEXUS</h1>
+        
+        <div class="grid-2">
+            <div class="section">
+                <h2><i class="fas fa-cloud"></i> Cloud Sync</h2>
+                <div style="display: grid; grid-template-columns: 1fr; gap: 5px;">
+                    <div><label>API Key</label><input type="password" id="fb-apiKey" placeholder="AIzaSy..."></div>
+                    <div><label>Database URL</label><input type="text" id="fb-dbUrl" placeholder="https://..."></div>
+                    <div><label>Node Path</label><input type="text" id="fb-path" placeholder="iot/kelas8" value="iot/kelas8"></div>
+                </div>
+                <button class="btn-blue" id="btn-connect-fb" style="width:100%; margin-top: 10px;"><i class="fas fa-link"></i> Hubungkan Firebase</button>
+            </div>
+
+            <div class="section">
+                <h2><i class="fas fa-microchip"></i> Hardware Link</h2>
+                <p style="margin-bottom: 20px; font-size: 0.9em;">Pastikan Micro:bit menyala dan ekstensi Bluetooth UART telah aktif pada MakeCode.</p>
+                <div style="display: flex; gap: 10px; flex-direction: column;">
+                    <button class="btn-blue" id="btn-connect-ble"><i class="fab fa-bluetooth"></i> Connect Micro:bit</button>
+                    <button id="btn-disconnect-ble" disabled><i class="fas fa-times"></i> Disconnect</button>
+                </div>
+                <div style="margin-top: 25px; padding: 15px; background: rgba(0,0,0,0.03); border-radius: 12px; text-align: center;">
+                    <label>RX / TX Format</label>
+                    <code style="color: var(--accent-blue); font-weight: bold;">key:value</code>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="builderPanel">
+            <h2 style="color: var(--accent-blue);"><i class="fas fa-magic"></i> Widget Builder</h2>
+            <div style="display: flex; gap: 15px; flex-wrap: wrap; align-items: flex-end;">
+                <div style="flex: 1; min-width: 200px;">
+                    <label>Nama Key (Database)</label>
+                    <input type="text" id="bKey" placeholder="contoh: suhu_ruangan" style="margin-bottom: 0;">
+                </div>
+                <div style="flex: 1; min-width: 200px;">
+                    <label>Tipe Widget</label>
+                    <select id="bType" style="margin-bottom: 0;">
+                        <option value="sensor">📈 Chart Sensor (Analog)</option>
+                        <option value="switch">⚡ Toggle Switch (0/1)</option>
+                        <option value="dimmer">🎚️ Dimmer Slider (Range)</option>
+                    </select>
+                </div>
+                <div style="flex: 0.5; min-width: 100px;">
+                    <label>Satuan</label>
+                    <input type="text" id="bUnit" placeholder="°C, Lux" style="margin-bottom: 0;">
+                </div>
+                <div style="flex: 0.5; min-width: 100px;">
+                    <label>Batas Max</label>
+                    <input type="number" id="bMax" placeholder="100" style="margin-bottom: 0;">
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn-blue" id="btnSaveParam"><i class="fas fa-save"></i> Simpan</button>
+                    <button class="btn-danger" id="btnCancelEdit" style="display:none;"><i class="fas fa-times"></i> Batal</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="dashboard-area" style="display: none; margin-top: 40px;">
+            <h3 class="section-title"><i class="fas fa-chart-area"></i> Telemetry Sensors</h3>
+            <div id="sensorGrid" class="grid-3" style="margin-bottom: 30px;"></div>
+
+            <div class="grid-2">
+                <div>
+                    <h3 class="section-title"><i class="fas fa-toggle-on"></i> Digital Switches</h3>
+                    <div id="switchGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px;"></div>
+                </div>
+                <div>
+                    <h3 class="section-title"><i class="fas fa-sliders-h"></i> Analog Dimmers</h3>
+                    <div id="dimmerGrid" style="display: flex; flex-direction: column; gap: 20px;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="terminal-section">
+            <div class="terminal-header">
+                <h2 style="color: #fff; margin: 0;"><i class="fas fa-terminal"></i> System Terminal</h2>
+                <button id="btnClearLog" style="background: rgba(255,255,255,0.1); padding: 8px 15px; font-size: 0.8em;"><i class="fas fa-trash"></i> Clear</button>
+            </div>
+            <div id="terminalLog" class="log-panel"></div>
+        </div>
+
+    </div>
+
+    <script type="module">
+        import { initializeApp, getApps, deleteApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+        import { getDatabase, ref, onValue, update, remove, set } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
+
+        // --- GLOBAL STATE ---
+        const state = {
+            db: null, currentPath: "", unsubscribe: null, currentData: {}, historyData: {}, 
+            device: null, txChar: null, rxChar: null, bleConnected: false, bleBuffer: "",
+            editModeKey: null, charts: {}
+        };
+
+        const MAX_CHART_POINTS = 20;
+        const $ = (id) => document.getElementById(id);
+        const formatName = (str) => str.replace(/_/g, ' ').toUpperCase();
+
+        // --- TERMINAL LOGGER ---
+        function logMsg(msg, color = "#a1a1a6") {
+            const time = new Date().toLocaleTimeString('id-ID', { hour12: false });
+            const html = `<div class="log-line"><span class="log-time">[${time}]</span> <span style="color:${color}">${msg}</span></div>`;
+            $('terminalLog').insertAdjacentHTML('afterbegin', html);
+        }
+
+        // --- STATUS UI UPDATE ---
+        function updateStatusUI() {
+            $('btn-connect-ble').disabled = state.bleConnected;
+            $('btn-disconnect-ble').disabled = !state.bleConnected;
+            const b = $('status-bt');
+            if(state.bleConnected) { b.innerHTML = '<i class="fab fa-bluetooth-b"></i> BT Connected'; b.style.color = 'var(--success)'; b.style.borderColor = 'var(--success)'; }
+            else { b.innerHTML = '<i class="fab fa-bluetooth-b"></i> BT Offline'; b.style.color = 'var(--text-gray)'; b.style.borderColor = 'var(--glass-border)'; }
+        }
+
+        function updateDBStatusUI(connected) {
+            const b = $('status-fb');
+            if(connected) { b.innerHTML = '<i class="fas fa-cloud"></i> DB Synced'; b.style.color = 'var(--success)'; b.style.borderColor = 'var(--success)'; }
+            else { b.innerHTML = '<i class="fas fa-cloud"></i> DB Offline'; b.style.color = 'var(--text-gray)'; b.style.borderColor = 'var(--glass-border)'; }
+        }
+
+        // --- BLUETOOTH LOGIC ---
+        const UART_SERVICE_UUID = "6e400001-b5a3-f393-e0a9-e50e24dcca9e";
+        const UART_TX_UUID = "6e400002-b5a3-f393-e0a9-e50e24dcca9e";
+        const UART_RX_UUID = "6e400003-b5a3-f393-e0a9-e50e24dcca9e";
+
+        async function connectBLE() {
+            try {
+                if (!navigator.bluetooth) throw new Error("Browser tidak mendukung Web Bluetooth.");
+                logMsg("Scanning BLE devices...", "var(--warning)");
+                
+                state.device = await navigator.bluetooth.requestDevice({
+                    filters: [{ namePrefix: "BBC micro:bit" }],
+                    optionalServices: [UART_SERVICE_UUID]
+                });
+                
+                state.device.addEventListener("gattserverdisconnected", () => {
+                    state.bleConnected = false; updateStatusUI(); logMsg("BLE Terputus!", "var(--danger)");
+                });
+
+                const server = await state.device.gatt.connect();
+                const service = await server.getPrimaryService(UART_SERVICE_UUID);
+                
+                state.txChar = await service.getCharacteristic(UART_TX_UUID);
+                state.rxChar = await service.getCharacteristic(UART_RX_UUID);
+                
+                await state.txChar.startNotifications();
+                state.txChar.addEventListener("characteristicvaluechanged", handleBLEData);
+                
+                state.bleConnected = true; updateStatusUI();
+                logMsg(`Terhubung ke ${state.device.name}`, "var(--success)");
+            } catch (e) { logMsg(`BLE Error: ${e.message}`, "var(--danger)"); }
+        }
+
+        function handleBLEData(event) {
+            let arr = [];
+            for (let i = 0; i < event.target.value.byteLength; i++) arr.push(event.target.value.getUint8(i));
+            state.bleBuffer += String.fromCharCode.apply(null, arr);
+            
+            const lines = state.bleBuffer.split('\n');
+            state.bleBuffer = lines.pop(); 
+            
+            lines.forEach(line => {
+                const txt = line.trim();
+                if (txt) processIncomingSensor(txt);
+            });
+        }
+
+        // --- KECERDASAN OTOMATIS DARI MAKECODE ---
+        function processIncomingSensor(txt) {
+            logMsg(`RX < ${txt}`, "var(--accent-blue)");
+            if (!state.db) return;
+
+            if (txt.includes(':')) {
+                const parts = txt.split(':');
+                let key = parts[0].trim().replace(/\s+/g, '_').toLowerCase();
+                const val = parseFloat(parts[1].trim());
+
+                if (key === "mode") key = "otomatis"; 
+
+                let autoType = "sensor"; 
+                if (key === "lampu" || key === "otomatis") autoType = "switch"; 
+                if (key === "kipas") autoType = "dimmer"; 
+
+                if (!isNaN(val)) {
+                    if (state.currentData[key]) {
+                        update(ref(state.db, `${state.currentPath}/${key}`), { value: val });
+                    } else {
+                        logMsg(`Auto-creating ${autoType}: ${key}`, "var(--warning)");
+                        set(ref(state.db, `${state.currentPath}/${key}`), { 
+                            tipe: autoType, value: val, satuan: "", batas_atas: autoType==="dimmer"?1024:100 
+                        });
+                    }
+                }
+            }
+        }
+
+        async function sendToMicrobit(key, val) {
+            if (!state.rxChar) { logMsg("Kirim gagal: BLE belum konek", "var(--danger)"); return; }
+            const payload = `${key},${val}\n`;
+            try {
+                await state.rxChar.writeValue(new TextEncoder().encode(payload));
+                logMsg(`TX > ${payload.trim()}`, "var(--warning)");
+            } catch(e) { logMsg(`TX Error: ${e.message}`, "var(--danger)"); }
+        }
+
+        // --- FIREBASE LOGIC ---
+        async function connectFirebase() {
+            const apiKey = $('fb-apiKey').value.trim();
+            const dbUrl = $('fb-dbUrl').value.trim();
+            const path = $('fb-path').value.trim();
+
+            if(!apiKey || !dbUrl || !path) { alert("Lengkapi config Firebase!"); return; }
+            
+            try {
+                const config = { apiKey, databaseURL: dbUrl, projectId: dbUrl.split('//')[1]?.split('.')[0] };
+                const apps = getApps();
+                if (apps.length > 0) await deleteApp(apps[0]);
+                if (state.unsubscribe) state.unsubscribe();
+
+                const app = initializeApp(config);
+                state.db = getDatabase(app);
+                state.currentPath = path;
+
+                logMsg(`Syncing to DB: /${path}`, "var(--success)");
+                
+                state.unsubscribe = onValue(ref(state.db, path), (snapshot) => {
+                    state.currentData = snapshot.val() || {};
+                    renderDashboard(state.currentData);
+                    updateDBStatusUI(true);
+                });
+
+                localStorage.setItem('iot_nexus_cfg', JSON.stringify({apiKey, dbUrl, path}));
+            } catch(e) { logMsg(`DB Error: ${e.message}`, "var(--danger)"); updateDBStatusUI(false); }
+        }
+
+        // --- DASHBOARD RENDERER ---
+        function generateControlsHTML(key) {
+            return `
+                <div class="widget-actions">
+                    <button class="btn-icon" onclick="window.editParam('${key}')" title="Edit"><i class="fas fa-edit" style="color:var(--accent-blue)"></i></button>
+                    <button class="btn-icon" onclick="window.deleteParam('${key}')" title="Delete"><i class="fas fa-trash" style="color:var(--danger)"></i></button>
+                </div>
+            `;
+        }
+
+        function renderDashboard(data) {
+            const keys = Object.keys(data);
+            if(keys.length > 0) $('dashboard-area').style.display = 'block';
+            else { $('dashboard-area').style.display = 'none'; return; }
+
+            const sensors = keys.filter(k => data[k].tipe === 'sensor');
+            const switches = keys.filter(k => data[k].tipe === 'switch');
+            const dimmers = keys.filter(k => data[k].tipe === 'dimmer');
+
+            renderSensors(sensors, data);
+            renderSwitches(switches, data);
+            renderDimmers(dimmers, data);
+        }
+
+        function renderSensors(keys, data) {
+            const grid = $('sensorGrid');
+            Array.from(grid.children).forEach(el => { if(!keys.includes(el.id.replace('card-',''))) { el.remove(); delete state.charts[el.id.replace('card-','')]; } });
+
+            keys.forEach(key => {
+                const item = data[key];
+                let card = $(`card-${key}`);
+                const timeLabel = new Date().toLocaleTimeString();
+                
+                if(!state.historyData[key]) state.historyData[key] = { labels: [], data: [] };
+                
+                // Track history
+                state.historyData[key].labels.push(timeLabel);
+                state.historyData[key].data.push(item.value);
+                if(state.historyData[key].labels.length > MAX_CHART_POINTS) {
+                    state.historyData[key].labels.shift();
+                    state.historyData[key].data.shift();
+                }
+
+                if (!card) {
+                    const html = `
+                        <div class="widget-card" id="card-${key}">
+                            ${generateControlsHTML(key)}
+                            <h3 class="widget-title">${formatName(key)}</h3>
+                            <div style="display:flex; align-items:baseline; justify-content:center;">
+                                <div class="widget-value" id="val-${key}">${item.value}</div>
+                                <div class="widget-unit">${item.satuan || ''}</div>
+                            </div>
+                            <div class="chart-container"><canvas id="chart-${key}"></canvas></div>
+                        </div>
+                    `;
+                    grid.insertAdjacentHTML('beforeend', html);
+                    initChart(key);
+                } else {
+                    $(`val-${key}`).innerText = item.value;
+                    updateChart(key);
+                }
+            });
+        }
+
+        function renderSwitches(keys, data) {
+            const grid = $('switchGrid');
+            Array.from(grid.children).forEach(el => { if(!keys.includes(el.id.replace('sw-card-',''))) el.remove(); });
+
+            keys.forEach(key => {
+                const item = data[key];
+                const isOn = (item.value == 1 || item.value === true);
+                let card = $(`sw-card-${key}`);
+
+                if (!card) {
+                    const html = `
+                        <div class="widget-card" id="sw-card-${key}" style="padding: 20px;">
+                            ${generateControlsHTML(key)}
+                            <h3 class="widget-title" style="font-size:0.9em; margin-bottom:10px;">${formatName(key)}</h3>
+                            <label class="switch">
+                                <input type="checkbox" id="switch-${key}" ${isOn ? 'checked' : ''} onchange="window.toggleSwitch('${key}', this.checked)">
+                                <span class="slider"></span>
+                            </label>
+                            <div id="sw-lbl-${key}" style="font-weight:700; color:${isOn ? 'var(--success)' : 'var(--text-gray)'}; font-size:1.2em;">${isOn ? 'ON' : 'OFF'}</div>
+                        </div>
+                    `;
+                    grid.insertAdjacentHTML('beforeend', html);
+                } else {
+                    const sw = $(`switch-${key}`);
+                    if(document.activeElement !== sw) {
+                        sw.checked = isOn;
+                        const lbl = $(`sw-lbl-${key}`);
+                        lbl.innerText = isOn ? 'ON' : 'OFF';
+                        lbl.style.color = isOn ? 'var(--success)' : 'var(--text-gray)';
+                    }
+                }
+            });
+        }
+
+        function renderDimmers(keys, data) {
+            const grid = $('dimmerGrid');
+            Array.from(grid.children).forEach(el => { if(!keys.includes(el.id.replace('dim-card-',''))) el.remove(); });
+
+            keys.forEach(key => {
+                const item = data[key];
+                const max = item.batas_atas || 1024;
+                let card = $(`dim-card-${key}`);
+
+                if(!card) {
+                    const html = `
+                        <div class="widget-card" id="dim-card-${key}" style="flex-direction: row; justify-content:space-between; flex-wrap: wrap; padding: 20px 30px;">
+                            ${generateControlsHTML(key)}
+                            <div style="width: 100%; display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:10px;">
+                               <h3 class="widget-title">${formatName(key)}</h3>
+                               <div style="color:var(--accent-blue); font-weight:800; font-size:1.2em;"><span id="dim-val-${key}">${item.value}</span> <span style="color:var(--text-gray);font-size:0.6em;">/ ${max}</span></div>
+                            </div>
+                            <input type="range" id="dimmer-${key}" min="0" max="${max}" value="${item.value}" onchange="window.changeDimmer('${key}', this.value)" oninput="document.getElementById('dim-val-${key}').innerText=this.value">
+                        </div>
+                    `;
+                    grid.insertAdjacentHTML('beforeend', html);
+                } else {
+                    const dim = $(`dimmer-${key}`);
+                    if(document.activeElement !== dim) {
+                        dim.value = item.value;
+                        $(`dim-val-${key}`).innerText = item.value;
+                    }
+                }
+            });
+        }
+
+        // --- CHART.JS LOGIC ---
+        function initChart(key) {
+            const ctx = $(`chart-${key}`).getContext('2d');
+            let gradient = ctx.createLinearGradient(0, 0, 0, 120);
+            gradient.addColorStop(0, 'rgba(0, 113, 227, 0.4)');
+            gradient.addColorStop(1, 'rgba(0, 113, 227, 0.0)');
+
+            state.charts[key] = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: state.historyData[key].labels,
+                    datasets: [{
+                        data: state.historyData[key].data,
+                        borderColor: '#0071e3', backgroundColor: gradient,
+                        borderWidth: 3, pointRadius: 0, pointHoverRadius: 6,
+                        fill: true, tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { display: false }, tooltip: { enabled: false } },
+                    scales: { y: { display: false, beginAtZero: true }, x: { display: false } },
+                    layout: { padding: 5 }, animation: { duration: 300 }
+                }
+            });
+        }
+
+        function updateChart(key) {
+            if(state.charts[key]) {
+                state.charts[key].data.labels = state.historyData[key].labels;
+                state.charts[key].data.datasets[0].data = state.historyData[key].data;
+                state.charts[key].update('none'); 
+            }
+        }
+
+        // --- INTERACTION LOGIC ---
+        window.toggleSwitch = async (key, isChecked) => {
+            const newVal = isChecked ? 1 : 0;
+            const lbl = $(`sw-lbl-${key}`);
+            lbl.innerText = isChecked ? 'ON' : 'OFF';
+            lbl.style.color = isChecked ? 'var(--success)' : 'var(--text-gray)';
+            
+            if (state.db) update(ref(state.db, `${state.currentPath}/${key}`), { value: newVal });
+            sendToMicrobit(key, newVal);
+        };
+
+        window.changeDimmer = async (key, newVal) => {
+            if (state.db) update(ref(state.db, `${state.currentPath}/${key}`), { value: parseInt(newVal) });
+            sendToMicrobit(key, parseInt(newVal));
+        };
+
+        window.deleteParam = async (key) => {
+            if(confirm(`Hapus parameter [${key}] dari database?`)) {
+                await remove(ref(state.db, `${state.currentPath}/${key}`));
+                if(state.historyData[key]) delete state.historyData[key];
+                logMsg(`Deleted: ${key}`, "var(--danger)");
+            }
+        };
+
+        window.editParam = (key) => {
+            const item = state.currentData[key];
+            if(!item) return;
+            $('bKey').value = key; $('bKey').readOnly = true; 
+            $('bType').value = item.tipe || 'sensor';
+            $('bUnit').value = item.satuan || '';
+            $('bMax').value = item.batas_atas || '';
+            
+            state.editModeKey = key;
+            $('btnCancelEdit').style.display = 'inline-flex';
+            $('btnSaveParam').innerHTML = '<i class="fas fa-check"></i> Update';
+            window.scrollTo({ top: $('builderPanel').offsetTop - 50, behavior: 'smooth' });
+        };
+
+        function resetBuilder() {
+            $('bKey').value = ''; $('bKey').readOnly = false; 
+            $('bUnit').value = ''; $('bMax').value = '';
+            state.editModeKey = null;
+            $('btnCancelEdit').style.display = 'none';
+            $('btnSaveParam').innerHTML = '<i class="fas fa-save"></i> Simpan';
+        }
+        $('btnCancelEdit').onclick = resetBuilder;
+
+        $('btnSaveParam').onclick = async () => {
+            if(!state.db) { alert("Hubungkan Firebase terlebih dahulu!"); return; }
+            let key = $('bKey').value.trim().replace(/\s+/g, '_').toLowerCase();
+            if(!key) return;
+
+            const payload = {
+                tipe: $('bType').value,
+                satuan: $('bUnit').value.trim(),
+                batas_atas: parseInt($('bMax').value) || ($('bType').value === 'dimmer'? 1024 : 100),
+                value: state.editModeKey ? state.currentData[state.editModeKey].value : 0
+            };
+
+            try {
+                await set(ref(state.db, `${state.currentPath}/${key}`), payload);
+                logMsg(`Saved Param: ${key}`, "var(--success)");
+                resetBuilder();
+            } catch(e) { logMsg(`Save Error: ${e.message}`, "var(--danger)"); }
+        };
+
+        // --- EVENT LISTENERS & INIT ---
+        $('btn-connect-ble').onclick = connectBLE;
+        $('btn-disconnect-ble').onclick = () => { if(state.device) state.device.gatt.disconnect(); };
+        $('btn-connect-fb').onclick = connectFirebase;
+        $('btnClearLog').onclick = () => $('terminalLog').innerHTML = '';
+
+        window.onload = () => {
+            const saved = JSON.parse(localStorage.getItem('iot_nexus_cfg') || '{}');
+            if(saved.apiKey) {
+                $('fb-apiKey').value = saved.apiKey;
+                $('fb-dbUrl').value = saved.dbUrl;
+                $('fb-path').value = saved.path || "iot/kelas8";
+            }
+            logMsg("SISTEM SIAP. Menunggu instruksi...", "var(--text-gray)");
+        };
+
+    </script>
+</body>
+</html>
