@@ -477,12 +477,18 @@ function updateLampuUI(key, isOn) {
 // SENSOR UI UPDATE
 // =====================================================================
 function updateSensorUI(key, val) {
+    // Update angka saja, biarkan span unit tetap ada
     const el = $(`val-${key}`);
     if (!el) return;
-    const unit = key === 'jarak' ? ' <span style="font-size:.5em">cm</span>'
-               : key === 'suhu'  ? ' <span style="font-size:.5em">°C</span>'
-               : '';
-    el.innerHTML = `${val}${unit}`;
+    // Cari span angka di dalamnya, kalau tidak ada langsung set
+    let numSpan = el.querySelector('.num-val');
+    if (!numSpan) {
+        // Pertama kali: rebuild dengan span terpisah
+        const unit = key === 'jarak' ? 'cm' : key === 'suhu' ? '°C' : '';
+        el.innerHTML = `<span class="num-val">${val}</span>${unit ? `<span style="font-size:.5em;margin-left:3px">${unit}</span>` : ''}`;
+    } else {
+        numSpan.textContent = val;
+    }
 }
 
 // =====================================================================
@@ -646,46 +652,62 @@ async function connectFirebase() {
 }
 
 // =====================================================================
-// CHART
+// CHART — init langsung saat halaman load, update saat data masuk
 // =====================================================================
-function pushHistory(key, val) {
-    const h = state.history[key];
-    if (!h) return;
-    const label = new Date().toLocaleTimeString();
-    h.labels.push(label); h.data.push(val);
-    if (h.labels.length > MAX_PTS) { h.labels.shift(); h.data.shift(); }
-    if (state.charts[key]) {
-        state.charts[key].data.labels              = h.labels;
-        state.charts[key].data.datasets[0].data   = h.data;
-        state.charts[key].update('none');
-    }
-}
+const CHART_COLORS = { jarak: '#0284c7', suhu: '#b35e00', infrared: '#c026d3' };
 
 function initCharts() {
-    const colors = { jarak: '#0284c7', suhu: '#b35e00', infrared: '#c026d3' };
     KEYS_SENSOR.forEach(key => {
         const canvas = $(`chart-${key}`);
         if (!canvas) return;
-        const ctx = canvas.getContext('2d');
-        const color = colors[key];
-        const grad = ctx.createLinearGradient(0, 0, 0, 90);
-        grad.addColorStop(0, color + '55');
+        // Destroy dulu kalau sudah ada (cegah duplikat)
+        if (state.charts[key]) { state.charts[key].destroy(); }
+
+        const ctx   = canvas.getContext('2d');
+        const color = CHART_COLORS[key];
+        const grad  = ctx.createLinearGradient(0, 0, 0, 90);
+        grad.addColorStop(0, color + '66');
         grad.addColorStop(1, color + '00');
 
         state.charts[key] = new Chart(ctx, {
             type: 'line',
             data: {
                 labels: state.history[key].labels,
-                datasets: [{ data: state.history[key].data, borderColor: color, backgroundColor: grad, borderWidth: 2.5, pointRadius: 0, fill: true, tension: 0.4 }]
+                datasets: [{
+                    data: state.history[key].data,
+                    borderColor: color,
+                    backgroundColor: grad,
+                    borderWidth: 2.5,
+                    pointRadius: 0,
+                    pointHoverRadius: 5,
+                    fill: true,
+                    tension: 0.4
+                }]
             },
             options: {
                 responsive: true, maintainAspectRatio: false,
                 plugins: { legend: { display: false }, tooltip: { enabled: false } },
                 scales: { y: { display: false }, x: { display: false } },
-                animation: { duration: 300 }
+                animation: { duration: 200 }
             }
         });
     });
+}
+
+function pushHistory(key, val) {
+    const h = state.history[key];
+    if (!h) return;
+    h.labels.push(new Date().toLocaleTimeString('id-ID', { hour12: false }));
+    h.data.push(parseFloat(val) || 0);
+    if (h.labels.length > MAX_PTS) { h.labels.shift(); h.data.shift(); }
+
+    // Kalau chart belum init (misalnya Chart.js baru selesai load), init dulu
+    if (!state.charts[key]) { initCharts(); return; }
+
+    const ch = state.charts[key];
+    ch.data.labels            = h.labels;
+    ch.data.datasets[0].data  = h.data;
+    ch.update('none');
 }
 
 // =====================================================================
