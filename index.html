@@ -85,6 +85,7 @@
         }
 
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 26px; }
 
         label { display: block; font-weight: 600; font-size: 0.87em; color: #8b5a9e; margin-bottom: 9px; }
         input {
@@ -96,6 +97,7 @@
         button {
             background: var(--accent-pink); color: white; border: none;
             padding: 16px 30px; border-radius: 18px; font-weight: 600; cursor: pointer;
+            transition: all 0.3s ease;
         }
         button:hover { background: var(--accent-hover); transform: translateY(-3px); }
 
@@ -115,6 +117,7 @@
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
 
+        /* Switch Pink */
         .switch { position: relative; display: inline-block; width: 74px; height: 39px; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider {
@@ -127,8 +130,6 @@
         }
         input:checked + .slider { background: linear-gradient(90deg, #ff2d95, #c026d3); }
         input:checked + .slider:before { transform: translateX(35px); }
-
-        .grid-3 { display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 26px; }
 
         .terminal-section {
             background: rgba(45, 27, 58, 0.9);
@@ -177,7 +178,7 @@
             </div>
         </div>
 
-        <div id="dashboard-area" style="display:none; margin-top:30px;">
+        <div id="dashboard-area" style="display:none; margin-top:40px;">
             <h2 style="margin-bottom:25px;"><i class="fas fa-chart-area"></i> Telemetry Sensors</h2>
             <div id="sensorGrid" class="grid-3"></div>
 
@@ -187,7 +188,7 @@
                     <div id="switchGrid" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:24px;"></div>
                 </div>
                 <div>
-                    <h2 style="margin-bottom:22px;"><i class="fas fa-sliders-h"></i> Dimmers</h2>
+                    <h2 style="margin-bottom:22px;"><i class="fas fa-sliders-h"></i> Dimmers / Lainnya</h2>
                     <div id="dimmerGrid" style="display:flex; flex-direction:column; gap:28px;"></div>
                 </div>
             </div>
@@ -247,7 +248,7 @@
             }
         }
 
-        // BLUETOOTH - dikembalikan ke style asli kamu yang berhasil
+        // Bluetooth (dari kode original yang berhasil)
         const UART_SERVICE_UUID = "6e400001-b5a3-f393-e0a9-e50e24dcca9e";
         const UART_TX_UUID = "6e400002-b5a3-f393-e0a9-e50e24dcca9e";
         const UART_RX_UUID = "6e400003-b5a3-f393-e0a9-e50e24dcca9e";
@@ -282,7 +283,6 @@
                 logMsg(`Terhubung ke ${state.device.name} 💖`, "#ff2d95");
             } catch (e) {
                 logMsg(`BLE Error: ${e.message}`, "#ff6b9d");
-                console.error(e);
             }
         }
 
@@ -300,19 +300,23 @@
             });
         }
 
+        // Process sesuai MakeCode kamu + 3 lampu
         function processIncomingSensor(txt) {
             logMsg(`RX < ${txt}`, "#ff9edb");
             if (!state.db || !txt.includes(':')) return;
 
             const parts = txt.split(':');
-            let key = parts[0].trim().replace(/\s+/g, '_').toLowerCase();
+            let key = parts[0].trim().toLowerCase();
             const val = parseFloat(parts[1].trim());
 
-            if (isNaN(val)) return;   // cegah data random / sensor cahaya
+            if (isNaN(val)) return;
 
             let autoType = "sensor";
-            if (["lampu", "lampu2", "lampu3", "otomatis"].includes(key)) {
+
+            // Support 3 lampu + mode otomatis
+            if (["status_lampu", "lampu", "lampu2", "lampu3", "mode_otomatis"].includes(key)) {
                 autoType = "switch";
+                if (key === "status_lampu") key = "lampu";   // supaya tampilan lebih bersih
             }
 
             if (state.currentData[key]) {
@@ -338,7 +342,7 @@
             }
         }
 
-        // Firebase (sama seperti sebelumnya)
+        // Firebase dengan status yang benar
         async function connectFirebase() {
             const apiKey = $('fb-apiKey').value.trim();
             const dbUrl = $('fb-dbUrl').value.trim();
@@ -362,14 +366,15 @@
                 });
 
                 localStorage.setItem('smarthome_cfg', JSON.stringify({apiKey, dbUrl, path}));
-                logMsg("Firebase terhubung ✨", "#ff2d95");
+                logMsg("Firebase terhubung berhasil ✨", "#ff2d95");
+                updateDBStatusUI(true);
             } catch (e) {
-                logMsg(`DB Error: ${e.message}`, "#ff6b9d");
+                logMsg(`Gagal connect Firebase: ${e.message}`, "#ff6b9d");
                 updateDBStatusUI(false);
             }
         }
 
-        // Render functions (sama seperti kode asli kamu, disederhanakan sedikit)
+        // Render Dashboard
         function renderDashboard(data) {
             const keys = Object.keys(data);
             $('dashboard-area').style.display = keys.length > 0 ? 'block' : 'none';
@@ -383,25 +388,54 @@
             renderDimmers(dimmers, data);
         }
 
-        // renderSensors, renderSwitches, renderDimmers, initChart, updateChart
-        // (saya persingkat karena panjang, tapi logic persis seperti kode asli kamu)
-        // Jika kamu butuh full render code, bilang "kasih full render" ya.
+        function renderSwitches(keys, data) {
+            const grid = $('switchGrid');
+            Array.from(grid.children).forEach(el => {
+                if (!keys.includes(el.id.replace('sw-card-', ''))) el.remove();
+            });
 
+            keys.forEach(key => {
+                const item = data[key];
+                const isOn = (item.value == 1 || item.value === true);
+                let card = $(`sw-card-${key}`);
+
+                if (!card) {
+                    const html = `
+                        <div class="widget-card" id="sw-card-${key}">
+                            <h3 class="widget-title">${formatName(key)}</h3>
+                            <label class="switch">
+                                <input type="checkbox" id="switch-${key}" ${isOn ? 'checked' : ''} 
+                                       onchange="window.toggleSwitch('${key}', this.checked)">
+                                <span class="slider"></span>
+                            </label>
+                            <div id="sw-lbl-${key}" style="margin-top:12px;font-weight:700;color:${isOn?'#34c759':'#888'};font-size:1.3em;">
+                                ${isOn ? 'ON' : 'OFF'}
+                            </div>
+                        </div>`;
+                    grid.insertAdjacentHTML('beforeend', html);
+                } else {
+                    const sw = $(`switch-${key}`);
+                    if (document.activeElement !== sw) {
+                        sw.checked = isOn;
+                        const lbl = $(`sw-lbl-${key}`);
+                        lbl.innerText = isOn ? 'ON' : 'OFF';
+                        lbl.style.color = isOn ? '#34c759' : '#888';
+                    }
+                }
+            });
+        }
+
+        // Toggle Switch
         window.toggleSwitch = (key, isChecked) => {
             const newVal = isChecked ? 1 : 0;
             if (state.db) update(ref(state.db, `${state.currentPath}/${key}`), { value: newVal });
             sendToMicrobit(key, newVal);
         };
 
-        window.changeDimmer = (key, newVal) => {
-            const val = parseInt(newVal);
-            if (state.db) update(ref(state.db, `${state.currentPath}/${key}`), { value: val });
-            sendToMicrobit(key, val);
-        };
-
+        // Event Listeners
+        $('btn-connect-fb').onclick = connectFirebase;
         $('btn-connect-ble').onclick = connectBLE;
         $('btn-disconnect-ble').onclick = () => { if(state.device) state.device.gatt.disconnect(); };
-        $('btn-connect-fb').onclick = connectFirebase;
         $('btnClearLog').onclick = () => $('terminalLog').innerHTML = '';
 
         window.onload = () => {
