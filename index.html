@@ -14,9 +14,9 @@
             --accent-hover: #ff4da6;
             --text-dark: #2d1b3a;
             --text-gray: #6b5a7e;
-            --glass-bg: rgba(255, 240, 255, 0.65);
-            --glass-card: rgba(255, 255, 255, 0.85);
             --success: #34c759;
+            --glass-bg: rgba(255, 240, 255, 0.68);
+            --glass-card: rgba(255, 255, 255, 0.88);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -26,7 +26,7 @@
             min-height: 100vh;
             background: linear-gradient(-45deg, #ffe0f0, #f8d7ff, #e0d4ff, #ffd1e6);
             background-size: 400% 400%;
-            animation: auroraBG 20s ease infinite;
+            animation: auroraBG 22s ease infinite;
             color: var(--text-dark);
             padding: 30px 20px;
         }
@@ -38,91 +38,77 @@
         }
 
         .container {
-            max-width: 1150px;
+            max-width: 1180px;
             margin: 0 auto;
             background: var(--glass-bg);
-            backdrop-filter: blur(30px);
-            border-radius: 32px;
-            border: 1px solid rgba(255,255,255,0.9);
-            box-shadow: 0 20px 50px rgba(255, 45, 149, 0.15);
+            backdrop-filter: blur(32px);
+            border-radius: 34px;
+            border: 1px solid rgba(255,255,255,0.95);
+            box-shadow: 0 25px 60px rgba(255, 45, 149, 0.18);
             padding: 50px 45px;
         }
 
         h1 {
-            font-size: 3.4em;
+            font-size: 3.5em;
             font-weight: 800;
             text-align: center;
             margin-bottom: 45px;
-            background: linear-gradient(90deg, #ff2d95, #c026d3, #ff2d95);
+            background: linear-gradient(90deg, #ff2d95, #c026d3);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            letter-spacing: -2px;
+            letter-spacing: -2.5px;
         }
 
         .status-container {
-            position: fixed;
-            top: 25px;
-            right: 25px;
-            z-index: 1000;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
+            position: fixed; top: 25px; right: 25px; z-index: 1000;
+            display: flex; flex-direction: column; gap: 12px;
         }
 
         .status-badge {
-            background: rgba(255,255,255,0.9);
+            background: rgba(255,255,255,0.92);
             backdrop-filter: blur(20px);
-            padding: 10px 22px;
+            padding: 10px 24px;
             border-radius: 30px;
-            font-size: 13.5px;
+            font-size: 13.8px;
             font-weight: 600;
             display: flex;
             align-items: center;
             gap: 10px;
-            box-shadow: 0 5px 20px rgba(255, 45, 149, 0.2);
+            box-shadow: 0 6px 20px rgba(255, 45, 149, 0.2);
         }
 
         .section {
             background: var(--glass-card);
             border-radius: 28px;
-            padding: 32px;
-            margin-bottom: 30px;
+            padding: 34px;
+            margin-bottom: 32px;
             border: 1px solid rgba(255,255,255,0.95);
-            box-shadow: 0 10px 35px rgba(255, 45, 149, 0.1);
+            box-shadow: 0 12px 40px rgba(255, 45, 149, 0.12);
         }
 
-        .grid-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-        }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
 
-        /* Input yang lebih cantik */
         label {
             display: block;
             font-weight: 600;
-            font-size: 0.85em;
+            font-size: 0.87em;
             color: #8b5a9e;
-            margin-bottom: 8px;
-            letter-spacing: 0.5px;
+            margin-bottom: 9px;
         }
 
-        input, select {
+        input {
             width: 100%;
-            padding: 16px 20px;
+            padding: 16px 22px;
             border: 2px solid #f8d7ff;
             border-radius: 18px;
-            font-size: 1em;
-            background: rgba(255,255,255,0.9);
+            font-size: 1.02em;
+            background: white;
             transition: all 0.3s ease;
-            color: var(--text-dark);
         }
 
-        input:focus, select:focus {
-            outline: none;
+        input:focus {
             border-color: var(--accent-pink);
-            box-shadow: 0 0 0 5px rgba(255, 45, 149, 0.15);
-            background: white;
+            box-shadow: 0 0 0 5px rgba(255, 45, 149, 0.18);
             transform: translateY(-1px);
         }
 
@@ -130,47 +116,36 @@
             background: var(--accent-pink);
             color: white;
             border: none;
-            padding: 15px 28px;
+            padding: 16px 30px;
             border-radius: 18px;
             font-weight: 600;
-            font-size: 1em;
             cursor: pointer;
             transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
         }
 
         button:hover {
             background: var(--accent-hover);
             transform: translateY(-3px);
-            box-shadow: 0 12px 30px rgba(255, 45, 149, 0.3);
+            box-shadow: 0 12px 30px rgba(255, 45, 149, 0.35);
         }
 
-        /* Widget Cards */
         .widget-card {
             background: rgba(255,255,255,0.95);
             border-radius: 26px;
-            padding: 26px;
-            box-shadow: 0 15px 40px rgba(255, 45, 149, 0.12);
+            padding: 28px;
+            box-shadow: 0 15px 45px rgba(255, 45, 149, 0.15);
             transition: all 0.4s ease;
             position: relative;
         }
 
         .widget-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 25px 55px rgba(255, 45, 149, 0.25);
+            transform: translateY(-10px);
+            box-shadow: 0 28px 60px rgba(255, 45, 149, 0.25);
         }
 
-        .widget-title {
-            font-size: 1.2em;
-            font-weight: 700;
-            color: #4a2c5a;
-            margin-bottom: 12px;
-        }
-
+        .widget-title { font-size: 1.22em; font-weight: 700; color: #4a2c5a; margin-bottom: 14px; }
         .widget-value {
-            font-size: 52px;
+            font-size: 54px;
             font-weight: 800;
             background: linear-gradient(90deg, #ff2d95, #c026d3);
             -webkit-background-clip: text;
@@ -178,67 +153,41 @@
         }
 
         /* Switch */
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 72px;
-            height: 38px;
-        }
+        .switch { position: relative; display: inline-block; width: 74px; height: 39px; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: #e0c8ff;
-            transition: .4s;
-            border-radius: 40px;
+            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+            background: #e0c8ff; transition: .4s; border-radius: 40px;
         }
         .slider:before {
-            position: absolute;
-            content: "";
-            height: 32px;
-            width: 32px;
-            left: 3px;
-            bottom: 3px;
-            background: white;
-            transition: .4s;
-            border-radius: 50%;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            position: absolute; content: ""; height: 33px; width: 33px;
+            left: 3px; bottom: 3px; background: white; transition: .4s; border-radius: 50%;
         }
-        input:checked + .slider {
-            background: linear-gradient(90deg, #ff2d95, #c026d3);
-        }
-        input:checked + .slider:before {
-            transform: translateX(34px);
-        }
+        input:checked + .slider { background: linear-gradient(90deg, #ff2d95, #c026d3); }
+        input:checked + .slider:before { transform: translateX(35px); }
 
-        .grid-3 {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 25px;
-        }
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 26px; }
 
         .terminal-section {
-            background: rgba(45, 27, 58, 0.88);
+            background: rgba(45, 27, 58, 0.9);
             border-radius: 28px;
-            padding: 30px;
+            padding: 32px;
             margin-top: 40px;
         }
 
         .log-panel {
-            height: 230px;
-            overflow-y: auto;
-            font-family: 'JetBrains Mono', monospace;
-            background: rgba(0,0,0,0.4);
+            height: 240px; overflow-y: auto;
+            font-family: monospace;
+            background: rgba(0,0,0,0.45);
             border-radius: 18px;
             padding: 20px;
             color: #e0d4ff;
-            font-size: 13.8px;
+            font-size: 14px;
         }
 
         @media (max-width: 768px) {
             .grid-2 { grid-template-columns: 1fr; }
-            h1 { font-size: 2.6em; }
+            h1 { font-size: 2.7em; }
         }
     </style>
 </head>
@@ -252,67 +201,50 @@
         <h1>SmartHome</h1>
 
         <div class="grid-2">
-            <!-- Cloud Sync -->
             <div class="section">
                 <h2><i class="fas fa-cloud" style="color:#ff2d95"></i> Cloud Sync</h2>
                 <div style="display: grid; grid-template-columns: 1fr; gap: 18px;">
-                    <div>
-                        <label>Firebase API Key</label>
-                        <input type="password" id="fb-apiKey" placeholder="AIzaSyxxxxxxxxxxxxxxxx">
-                    </div>
-                    <div>
-                        <label>Database URL</label>
-                        <input type="text" id="fb-dbUrl" placeholder="https://nama-project-default-rtdb.firebaseio.com">
-                    </div>
-                    <div>
-                        <label>Node Path</label>
-                        <input type="text" id="fb-path" value="iot/kelas8" placeholder="iot/kelas8">
-                    </div>
+                    <div><label>Firebase API Key</label><input type="password" id="fb-apiKey" placeholder="AIzaSy..."></div>
+                    <div><label>Database URL</label><input type="text" id="fb-dbUrl" placeholder="https://..."></div>
+                    <div><label>Node Path</label><input type="text" id="fb-path" value="iot/kelas8"></div>
                 </div>
-                <button id="btn-connect-fb" style="width:100%; margin-top: 20px; padding: 16px;">
-                    <i class="fas fa-link"></i> Hubungkan ke Firebase
+                <button id="btn-connect-fb" style="width:100%; margin-top: 22px;">
+                    <i class="fas fa-link"></i> Hubungkan Firebase
                 </button>
             </div>
 
-            <!-- Hardware -->
             <div class="section">
                 <h2><i class="fas fa-microchip" style="color:#ff2d95"></i> Hardware Link</h2>
-                <p style="margin: 15px 0 25px; color: var(--text-gray); line-height: 1.5;">
-                    Pastikan Micro:bit sudah menyala dan ekstensi Bluetooth UART aktif di MakeCode.
-                </p>
-                <button id="btn-connect-ble" style="width:100%; margin-bottom: 12px;">
+                <p style="margin:20px 0 25px; color:var(--text-gray);">Pastikan Micro:bit menyala dan Bluetooth UART aktif.</p>
+                <button id="btn-connect-ble" style="width:100%; margin-bottom:12px;">
                     <i class="fab fa-bluetooth"></i> Connect Micro:bit
                 </button>
-                <button id="btn-disconnect-ble" disabled style="width:100%; background:#9f9f9f;">
+                <button id="btn-disconnect-ble" disabled style="width:100%;">
                     <i class="fas fa-times"></i> Disconnect
                 </button>
             </div>
         </div>
 
-        <!-- Dashboard Area -->
-        <div id="dashboard-area" style="display: none; margin-top: 20px;">
-            <h2 style="margin-bottom: 25px; color:#4a2c5a;"><i class="fas fa-chart-area"></i> Telemetry Sensors</h2>
+        <div id="dashboard-area" style="display:none; margin-top:30px;">
+            <h2 style="margin-bottom:25px;"><i class="fas fa-chart-area"></i> Telemetry Sensors</h2>
             <div id="sensorGrid" class="grid-3"></div>
 
-            <div class="grid-2" style="margin-top: 40px;">
+            <div class="grid-2" style="margin-top:45px;">
                 <div>
-                    <h2 style="margin-bottom: 20px; color:#4a2c5a;"><i class="fas fa-toggle-on"></i> Lampu & Switch</h2>
-                    <div id="switchGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 22px;"></div>
+                    <h2 style="margin-bottom:22px;"><i class="fas fa-toggle-on"></i> Lampu & Switch</h2>
+                    <div id="switchGrid" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:24px;"></div>
                 </div>
                 <div>
-                    <h2 style="margin-bottom: 20px; color:#4a2c5a;"><i class="fas fa-sliders-h"></i> Dimmers</h2>
-                    <div id="dimmerGrid" style="display: flex; flex-direction: column; gap: 25px;"></div>
+                    <h2 style="margin-bottom:22px;"><i class="fas fa-sliders-h"></i> Dimmers</h2>
+                    <div id="dimmerGrid" style="display:flex; flex-direction:column; gap:28px;"></div>
                 </div>
             </div>
         </div>
 
-        <!-- Terminal -->
         <div class="terminal-section">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; color: white;">
-                <h2 style="margin:0; color:white;"><i class="fas fa-terminal"></i> System Terminal</h2>
-                <button id="btnClearLog" style="background:rgba(255,255,255,0.2); padding: 8px 18px; font-size: 0.9em;">
-                    <i class="fas fa-trash"></i> Clear Log
-                </button>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;color:white;">
+                <h2 style="margin:0;color:white;"><i class="fas fa-terminal"></i> System Terminal</h2>
+                <button id="btnClearLog" style="background:rgba(255,255,255,0.2);padding:9px 18px;">Clear Log</button>
             </div>
             <div id="terminalLog" class="log-panel"></div>
         </div>
@@ -320,11 +252,19 @@
 
     <script type="module">
         import { initializeApp, getApps, deleteApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-        import { getDatabase, ref, onValue, update, remove, set } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
+        import { getDatabase, ref, onValue, update, set, remove } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
 
         const state = {
-            db: null, currentPath: "", unsubscribe: null, currentData: {}, historyData: {},
-            device: null, txChar: null, rxChar: null, bleConnected: false, bleBuffer: "",
+            db: null,
+            currentPath: "",
+            unsubscribe: null,
+            currentData: {},
+            historyData: {},
+            device: null,
+            txChar: null,
+            rxChar: null,
+            bleConnected: false,
+            bleBuffer: "",
             charts: {}
         };
 
@@ -335,8 +275,9 @@
 
         function logMsg(msg, color = "#e0d4ff") {
             const time = new Date().toLocaleTimeString('id-ID', { hour12: false });
-            const html = `<div style="margin-bottom:8px;"><span style="color:#c4b5fd;">[${time}]</span> <span style="color:${color}">${msg}</span></div>`;
-            $('terminalLog').insertAdjacentHTML('afterbegin', html);
+            $('terminalLog').insertAdjacentHTML('afterbegin', 
+                `<div style="margin-bottom:7px;"><span style="color:#c4b5fd;">[${time}]</span> <span style="color:${color}">${msg}</span></div>`
+            );
         }
 
         function updateStatusUI() {
@@ -363,26 +304,55 @@
             }
         }
 
-        // BLE & Firebase logic tetap sama seperti sebelumnya (processIncomingSensor sudah support lampu, lampu2, lampu3)
-
+        // ==================== BLUETOOTH ====================
         const UART_SERVICE_UUID = "6e400001-b5a3-f393-e0a9-e50e24dcca9e";
         const UART_TX_UUID = "6e400002-b5a3-f393-e0a9-e50e24dcca9e";
         const UART_RX_UUID = "6e400003-b5a3-f393-e0a9-e50e24dcca9e";
 
-        async function connectBLE() { /* ... sama seperti kode sebelumnya ... */ 
-            // (Saya persingkat karena panjang, tapi logic tetap sama)
+        async function connectBLE() {
             try {
+                if (!navigator.bluetooth) throw new Error("Browser tidak mendukung Web Bluetooth.");
+                logMsg("Scanning Micro:bit...", "#ff9edb");
+
                 state.device = await navigator.bluetooth.requestDevice({
                     filters: [{ namePrefix: "BBC micro:bit" }],
                     optionalServices: [UART_SERVICE_UUID]
                 });
-                // ... lanjutkan connect seperti kode sebelumnya
-                logMsg("Terhubung ke Micro:bit 💖", "#ff2d95");
+
+                state.device.addEventListener("gattserverdisconnected", () => {
+                    state.bleConnected = false;
+                    updateStatusUI();
+                    logMsg("BLE Terputus!", "#ff6b9d");
+                });
+
+                const server = await state.device.gatt.connect();
+                const service = await server.getPrimaryService(UART_SERVICE_UUID);
+                state.txChar = await service.getCharacteristic(UART_TX_UUID);
+                state.rxChar = await service.getCharacteristic(UART_RX_UUID);
+
+                await state.txChar.startNotifications();
+                state.txChar.addEventListener("characteristicvaluechanged", handleBLEData);
+
                 state.bleConnected = true;
                 updateStatusUI();
-            } catch(e) {
-                logMsg("BLE Error: " + e.message, "#ff6b9d");
+                logMsg(`Terhubung ke ${state.device.name} 💖`, "#ff2d95");
+            } catch (e) {
+                logMsg(`BLE Error: ${e.message}`, "#ff6b9d");
             }
+        }
+
+        function handleBLEData(event) {
+            let arr = [];
+            for (let i = 0; i < event.target.value.byteLength; i++) arr.push(event.target.value.getUint8(i));
+            state.bleBuffer += String.fromCharCode.apply(null, arr);
+
+            const lines = state.bleBuffer.split('\n');
+            state.bleBuffer = lines.pop() || "";
+
+            lines.forEach(line => {
+                const txt = line.trim();
+                if (txt) processIncomingSensor(txt);
+            });
         }
 
         function processIncomingSensor(txt) {
@@ -403,36 +373,254 @@
                     if (state.currentData[key]) {
                         update(ref(state.db, `${state.currentPath}/${key}`), { value: val });
                     } else {
+                        logMsg(`Auto create ${autoType}: ${key}`, "#ff9edb");
                         set(ref(state.db, `${state.currentPath}/${key}`), {
                             tipe: autoType,
                             value: val,
                             satuan: "",
-                            batas_atas: 100
+                            batas_atas: autoType === "dimmer" ? 1024 : 100
                         });
                     }
                 }
             }
         }
 
-        // connectFirebase, renderDashboard, dll tetap sama seperti versi sebelumnya
+        async function sendToMicrobit(key, val) {
+            if (!state.rxChar) return logMsg("BLE belum terhubung!", "#ff6b9d");
+            const payload = `${key}:${val}\n`;
+            try {
+                await state.rxChar.writeValue(new TextEncoder().encode(payload));
+                logMsg(`TX > ${payload.trim()}`, "#ff9edb");
+            } catch (e) {
+                logMsg(`TX Error: ${e.message}`, "#ff6b9d");
+            }
+        }
 
-        $('btn-connect-fb').onclick = async () => {
-            // ... logic connect firebase (sama seperti sebelumnya)
-            logMsg("Firebase berhasil terhubung ✨", "#ff2d95");
+        // ==================== FIREBASE ====================
+        async function connectFirebase() {
+            const apiKey = $('fb-apiKey').value.trim();
+            const dbUrl = $('fb-dbUrl').value.trim();
+            const path = $('fb-path').value.trim() || "iot/kelas8";
+
+            if (!apiKey || !dbUrl) {
+                alert("Mohon isi API Key dan Database URL!");
+                return;
+            }
+
+            try {
+                const config = { apiKey, databaseURL: dbUrl };
+                if (getApps().length > 0) await deleteApp(getApps()[0]);
+                if (state.unsubscribe) state.unsubscribe();
+
+                const app = initializeApp(config);
+                state.db = getDatabase(app);
+                state.currentPath = path;
+
+                // Listener utama
+                state.unsubscribe = onValue(ref(state.db, path), (snapshot) => {
+                    state.currentData = snapshot.val() || {};
+                    renderDashboard(state.currentData);
+                    updateDBStatusUI(true);   // <-- Ini yang memperbaiki status DB
+                }, (error) => {
+                    logMsg(`Firebase Error: ${error.message}`, "#ff6b9d");
+                    updateDBStatusUI(false);
+                });
+
+                localStorage.setItem('smarthome_cfg', JSON.stringify({apiKey, dbUrl, path}));
+                logMsg("Firebase berhasil terhubung ✨", "#ff2d95");
+                updateDBStatusUI(true);
+            } catch (e) {
+                logMsg(`Gagal connect DB: ${e.message}`, "#ff6b9d");
+                updateDBStatusUI(false);
+            }
+        }
+
+        // ==================== RENDER DASHBOARD ====================
+        function renderDashboard(data) {
+            const keys = Object.keys(data);
+            $('dashboard-area').style.display = keys.length > 0 ? 'block' : 'none';
+
+            const sensors = keys.filter(k => data[k]?.tipe === 'sensor');
+            const switches = keys.filter(k => data[k]?.tipe === 'switch');
+            const dimmers = keys.filter(k => data[k]?.tipe === 'dimmer');
+
+            renderSensors(sensors, data);
+            renderSwitches(switches, data);
+            renderDimmers(dimmers, data);
+        }
+
+        // Render Sensors + Chart (sama seperti versi awal, tapi lebih clean)
+        function renderSensors(keys, data) {
+            const grid = $('sensorGrid');
+            Array.from(grid.children).forEach(el => {
+                if (!keys.includes(el.id.replace('card-', ''))) el.remove();
+            });
+
+            keys.forEach(key => {
+                const item = data[key];
+                let card = $(`card-${key}`);
+
+                if (!state.historyData[key]) state.historyData[key] = { labels: [], data: [] };
+                const timeLabel = new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+                state.historyData[key].labels.push(timeLabel);
+                state.historyData[key].data.push(item.value);
+                if (state.historyData[key].labels.length > MAX_CHART_POINTS) {
+                    state.historyData[key].labels.shift();
+                    state.historyData[key].data.shift();
+                }
+
+                if (!card) {
+                    const html = `
+                        <div class="widget-card" id="card-${key}">
+                            <h3 class="widget-title">${formatName(key)}</h3>
+                            <div style="display:flex;align-items:baseline;justify-content:center;">
+                                <div class="widget-value" id="val-${key}">${item.value}</div>
+                                <div style="font-size:0.9em;margin-left:6px;color:#888;">${item.satuan || ''}</div>
+                            </div>
+                            <div class="chart-container" style="height:130px;margin-top:15px;"><canvas id="chart-${key}"></canvas></div>
+                        </div>`;
+                    grid.insertAdjacentHTML('beforeend', html);
+                    initChart(key);
+                } else {
+                    $(`val-${key}`).innerText = item.value;
+                    updateChart(key);
+                }
+            });
+        }
+
+        function renderSwitches(keys, data) {
+            const grid = $('switchGrid');
+            Array.from(grid.children).forEach(el => {
+                if (!keys.includes(el.id.replace('sw-card-', ''))) el.remove();
+            });
+
+            keys.forEach(key => {
+                const item = data[key];
+                const isOn = item.value == 1 || item.value === true;
+                let card = $(`sw-card-${key}`);
+
+                if (!card) {
+                    const html = `
+                        <div class="widget-card" id="sw-card-${key}">
+                            <h3 class="widget-title">${formatName(key)}</h3>
+                            <label class="switch">
+                                <input type="checkbox" id="switch-${key}" ${isOn ? 'checked' : ''} onchange="window.toggleSwitch('${key}', this.checked)">
+                                <span class="slider"></span>
+                            </label>
+                            <div id="sw-lbl-${key}" style="margin-top:12px;font-weight:700;color:${isOn?'#34c759':'#888'};font-size:1.3em;">
+                                ${isOn ? 'ON' : 'OFF'}
+                            </div>
+                        </div>`;
+                    grid.insertAdjacentHTML('beforeend', html);
+                } else {
+                    const sw = $(`switch-${key}`);
+                    if (document.activeElement !== sw) {
+                        sw.checked = isOn;
+                        const lbl = $(`sw-lbl-${key}`);
+                        lbl.innerText = isOn ? 'ON' : 'OFF';
+                        lbl.style.color = isOn ? '#34c759' : '#888';
+                    }
+                }
+            });
+        }
+
+        function renderDimmers(keys, data) {
+            const grid = $('dimmerGrid');
+            Array.from(grid.children).forEach(el => {
+                if (!keys.includes(el.id.replace('dim-card-', ''))) el.remove();
+            });
+
+            keys.forEach(key => {
+                const item = data[key];
+                const max = item.batas_atas || 1024;
+                let card = $(`dim-card-${key}`);
+
+                if (!card) {
+                    const html = `
+                        <div class="widget-card" id="dim-card-${key}">
+                            <h3 class="widget-title">${formatName(key)}</h3>
+                            <div style="display:flex;justify-content:space-between;margin-bottom:12px;">
+                                <span style="font-weight:700;color:var(--accent-pink);">Value</span>
+                                <span id="dim-val-${key}" style="font-size:1.4em;font-weight:800;color:#ff2d95;">${item.value}</span>
+                            </div>
+                            <input type="range" id="dimmer-${key}" min="0" max="${max}" value="${item.value}" 
+                                   oninput="document.getElementById('dim-val-${key}').innerText=this.value"
+                                   onchange="window.changeDimmer('${key}', this.value)">
+                        </div>`;
+                    grid.insertAdjacentHTML('beforeend', html);
+                } else {
+                    const dim = $(`dimmer-${key}`);
+                    if (document.activeElement !== dim) {
+                        dim.value = item.value;
+                        $(`dim-val-${key}`).innerText = item.value;
+                    }
+                }
+            });
+        }
+
+        // Chart functions
+        function initChart(key) {
+            const ctx = $(`chart-${key}`).getContext('2d');
+            const gradient = ctx.createLinearGradient(0, 0, 0, 130);
+            gradient.addColorStop(0, 'rgba(255, 45, 149, 0.45)');
+            gradient.addColorStop(1, 'rgba(255, 45, 149, 0)');
+
+            state.charts[key] = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: state.historyData[key].labels,
+                    datasets: [{ 
+                        data: state.historyData[key].data,
+                        borderColor: '#ff2d95',
+                        backgroundColor: gradient,
+                        borderWidth: 3,
+                        tension: 0.4,
+                        pointRadius: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false }, tooltip: { enabled: false } },
+                    scales: { x: { display: false }, y: { display: false, beginAtZero: true } }
+                }
+            });
+        }
+
+        function updateChart(key) {
+            if (state.charts[key]) {
+                state.charts[key].data.labels = state.historyData[key].labels;
+                state.charts[key].data.datasets[0].data = state.historyData[key].data;
+                state.charts[key].update('none');
+            }
+        }
+
+        // Global functions for onclick
+        window.toggleSwitch = (key, isChecked) => {
+            const newVal = isChecked ? 1 : 0;
+            if (state.db) update(ref(state.db, `${state.currentPath}/${key}`), { value: newVal });
+            sendToMicrobit(key, newVal);
         };
 
+        window.changeDimmer = (key, newVal) => {
+            if (state.db) update(ref(state.db, `${state.currentPath}/${key}`), { value: parseInt(newVal) });
+            sendToMicrobit(key, parseInt(newVal));
+        };
+
+        // Event listeners
+        $('btn-connect-fb').onclick = connectFirebase;
         $('btn-connect-ble').onclick = connectBLE;
-        $('btn-disconnect-ble').onclick = () => { if(state.device) state.device.gatt.disconnect(); };
+        $('btn-disconnect-ble').onclick = () => { if (state.device) state.device.gatt.disconnect(); };
         $('btnClearLog').onclick = () => $('terminalLog').innerHTML = '';
 
         window.onload = () => {
-            const saved = JSON.parse(localStorage.getItem('iot_nexus_cfg') || '{}');
+            const saved = JSON.parse(localStorage.getItem('smarthome_cfg') || '{}');
             if (saved.apiKey) {
                 $('fb-apiKey').value = saved.apiKey;
                 $('fb-dbUrl').value = saved.dbUrl;
                 $('fb-path').value = saved.path || "iot/kelas8";
             }
-            logMsg("SmartHome siap digunakan 💕", "#c026d3");
+            logMsg("SmartHome siap digunakan 💕", "#ff2d95");
         };
     </script>
 </body>
