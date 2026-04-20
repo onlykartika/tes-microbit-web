@@ -3,320 +3,710 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SmartHome</title>
+    <title>SmartHome IoT</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+
         :root {
-            --accent-pink: #ff2d95;
-            --accent-hover: #ff4da6;
-            --text-dark: #2d1b3a;
-            --text-gray: #6b5a7e;
-            --success: #34c759;
-            --glass-bg: rgba(255, 240, 255, 0.68);
-            --glass-card: rgba(255, 255, 255, 0.88);
+            --pink:       #ff2d95;
+            --pink-hover: #ff4da6;
+            --purple:     #c026d3;
+            --text-dark:  #2d1b3a;
+            --text-gray:  #6b5a7e;
+            --success:    #34c759;
+            --danger:     #ff3b30;
+            --warning:    #ff9500;
+            --glass-bg:   rgba(255, 240, 255, 0.68);
+            --glass-card: rgba(255, 255, 255, 0.92);
+            --radius:     24px;
+            --btn-r:      14px;
         }
+
         * { box-sizing: border-box; margin: 0; padding: 0; }
+
         body {
             font-family: 'Poppins', sans-serif;
             min-height: 100vh;
             background: linear-gradient(-45deg, #ffe0f0, #f8d7ff, #e0d4ff, #ffd1e6);
             background-size: 400% 400%;
-            animation: auroraBG 22s ease infinite;
+            animation: aurora 22s ease infinite;
             color: var(--text-dark);
             padding: 30px 20px;
         }
-        @keyframes auroraBG { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
-        .container { max-width: 1180px; margin: 0 auto; background: var(--glass-bg); backdrop-filter: blur(32px); border-radius: 34px; border: 1px solid rgba(255,255,255,0.95); box-shadow: 0 25px 60px rgba(255,45,149,0.18); padding: 50px 45px; }
-        h1 { font-size: 3.5em; font-weight: 800; text-align: center; margin-bottom: 45px; background: linear-gradient(90deg,#ff2d95,#c026d3); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
-        .status-container { position: fixed; top: 25px; right: 25px; z-index: 1000; display: flex; flex-direction: column; gap: 12px; }
-        .status-badge { background: rgba(255,255,255,0.92); backdrop-filter: blur(20px); padding: 10px 24px; border-radius: 30px; font-size: 13.8px; font-weight: 600; display: flex; align-items: center; gap: 10px; box-shadow: 0 6px 20px rgba(255,45,149,0.2); }
-        .section { background: var(--glass-card); border-radius: 28px; padding: 34px; margin-bottom: 32px; border: 1px solid rgba(255,255,255,0.95); }
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
-        .grid-3 { display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 26px; }
-        label { display: block; font-weight: 600; font-size: 0.87em; color: #8b5a9e; margin-bottom: 9px; }
-        input { width: 100%; padding: 16px 22px; border: 2px solid #f8d7ff; border-radius: 18px; font-size: 1.02em; background: white; }
-        input:focus { border-color: var(--accent-pink); box-shadow: 0 0 0 5px rgba(255,45,149,0.18); }
-        button { background: var(--accent-pink); color: white; border: none; padding: 16px 30px; border-radius: 18px; font-weight: 600; cursor: pointer; }
-        button:hover { background: var(--accent-hover); transform: translateY(-3px); }
-        .widget-card { background: rgba(255,255,255,0.95); border-radius: 26px; padding: 28px; box-shadow: 0 15px 45px rgba(255,45,149,0.15); transition: all 0.4s ease; }
-        .widget-card:hover { transform: translateY(-8px); }
-        .widget-title { font-size: 1.22em; font-weight: 700; color: #4a2c5a; margin-bottom: 14px; }
-        .widget-value { font-size: 54px; font-weight: 800; background: linear-gradient(90deg,#ff2d95,#c026d3); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
-        .switch { position: relative; display: inline-block; width: 74px; height: 39px; }
+        @keyframes aurora {
+            0%   { background-position: 0% 50%; }
+            50%  { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            max-width: 1200px; margin: 0 auto;
+            background: var(--glass-bg);
+            backdrop-filter: blur(32px);
+            border-radius: 34px;
+            border: 1px solid rgba(255,255,255,0.95);
+            box-shadow: 0 25px 60px rgba(255,45,149,0.15);
+            padding: 50px 45px;
+        }
+
+        h1 {
+            font-size: 3.2em; font-weight: 800; text-align: center; margin-bottom: 40px;
+            background: linear-gradient(90deg, var(--pink), var(--purple));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        h2 { font-size: 1.05em; font-weight: 700; margin-bottom: 16px; color: var(--text-dark); display: flex; align-items: center; gap: 8px; }
+        h3.sec { font-size: 1.2em; font-weight: 700; margin: 32px 0 16px; padding-bottom: 10px; border-bottom: 2px solid rgba(255,180,220,0.4); }
+
+        /* Status badges */
+        .status-wrap { position: fixed; top: 24px; right: 24px; z-index: 1000; display: flex; flex-direction: column; gap: 10px; }
+        .badge {
+            background: rgba(255,255,255,0.93); backdrop-filter: blur(20px);
+            padding: 9px 22px; border-radius: 30px; font-size: 13px; font-weight: 600;
+            display: flex; align-items: center; gap: 9px;
+            box-shadow: 0 6px 20px rgba(255,45,149,0.18); transition: all .3s;
+        }
+
+        .section { background: var(--glass-card); border-radius: 28px; padding: 32px; margin-bottom: 28px; border: 1px solid rgba(255,255,255,0.95); }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px,1fr)); gap: 22px; }
+
+        label { display: block; font-weight: 600; font-size: 0.8em; color: #8b5a9e; margin-bottom: 7px; text-transform: uppercase; letter-spacing: .4px; }
+        input, select {
+            width: 100%; padding: 13px 17px; border: 2px solid #f0d0ff;
+            border-radius: var(--btn-r); font-size: .93em; background: white;
+            font-family: 'Poppins', sans-serif; color: var(--text-dark); outline: none;
+            transition: all .3s; font-weight: 500; margin-bottom: 14px;
+        }
+        input:focus, select:focus { border-color: var(--pink); box-shadow: 0 0 0 4px rgba(255,45,149,.15); }
+        input[type=range] { -webkit-appearance: none; background: transparent; padding: 0; margin: 12px 0; box-shadow: none; border: none; }
+        input[type=range]::-webkit-slider-runnable-track { height: 8px; background: linear-gradient(90deg,#f0d0ff,#e0b0f0); border-radius: 4px; }
+        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 24px; width: 24px; border-radius: 50%; background: #fff; margin-top: -8px; border: 2px solid var(--pink); box-shadow: 0 2px 6px rgba(0,0,0,.2); cursor: pointer; transition: transform .1s; }
+        input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+
+        button {
+            background: var(--pink); color: white; border: none;
+            padding: 13px 24px; border-radius: var(--btn-r); font-weight: 600;
+            cursor: pointer; font-family: 'Poppins', sans-serif; font-size: .9em;
+            display: inline-flex; align-items: center; gap: 7px; transition: all .3s;
+        }
+        button:hover { background: var(--pink-hover); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(255,45,149,.3); }
+        button:disabled { background: #ccc; cursor: not-allowed; transform: none; box-shadow: none; }
+        .btn-dark   { background: var(--text-dark); }
+        .btn-dark:hover { background: #4a2c5a; box-shadow: 0 6px 20px rgba(45,27,58,.3); }
+        .btn-danger { background: var(--danger); }
+        .btn-danger:hover { background: #e02020; box-shadow: 0 6px 20px rgba(255,59,48,.3); }
+        .btn-icon   { background: transparent; color: var(--text-gray); padding: 5px 7px; box-shadow: none; font-size: .95em; }
+        .btn-icon:hover { background: rgba(255,45,149,.08); color: var(--pink); transform: scale(1.1); box-shadow: none; }
+
+        /* Mode Toggle Banner */
+        .mode-banner {
+            background: linear-gradient(135deg, rgba(255,45,149,.12), rgba(192,38,211,.12));
+            border: 2px solid rgba(255,45,149,.25);
+            border-radius: var(--radius); padding: 22px 30px;
+            display: flex; align-items: center; justify-content: space-between;
+            flex-wrap: wrap; gap: 16px; margin-bottom: 28px;
+        }
+        .mode-info h3 { font-size: 1.1em; font-weight: 700; margin-bottom: 4px; }
+        .mode-info p  { font-size: .85em; color: var(--text-gray); }
+        .mode-badge {
+            padding: 8px 20px; border-radius: 20px; font-weight: 700; font-size: .9em;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .mode-badge.auto   { background: rgba(52,199,89,.15);  color: #1a8a3a; border: 2px solid rgba(52,199,89,.4); }
+        .mode-badge.manual { background: rgba(255,149,0,.15);  color: #b35e00; border: 2px solid rgba(255,149,0,.4); }
+        .mode-btn { padding: 12px 22px; font-size: .88em; }
+
+        /* Widget Card */
+        .widget-card {
+            background: rgba(255,255,255,.96); border-radius: var(--radius); padding: 24px;
+            box-shadow: 0 10px 35px rgba(255,45,149,.1); transition: all .4s;
+            position: relative; text-align: center; display: flex; flex-direction: column; align-items: center;
+        }
+        .widget-card:hover { transform: translateY(-5px); box-shadow: 0 20px 50px rgba(255,45,149,.18); }
+        .widget-actions { position: absolute; top: 11px; right: 11px; display: flex; gap: 3px; opacity: 0; transition: opacity .3s; }
+        .widget-card:hover .widget-actions { opacity: 1; }
+        .widget-title { font-size: .95em; font-weight: 700; color: #4a2c5a; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 4px; }
+        .widget-unit  { font-size: .68em; font-weight: 600; color: var(--text-gray); margin-left: 3px; }
+        .widget-value {
+            font-size: 44px; font-weight: 800; margin: 6px 0; letter-spacing: -1px;
+            background: linear-gradient(135deg, var(--pink), var(--purple));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .chart-wrap { position: relative; height: 90px; width: 100%; margin-top: 6px; }
+
+        /* Sensor Summary Cards */
+        .sensor-summary {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 28px;
+        }
+        .sensor-card {
+            background: var(--glass-card); border-radius: 20px; padding: 20px 22px;
+            border: 1px solid rgba(255,255,255,.95); display: flex; align-items: center; gap: 16px;
+        }
+        .sensor-icon { font-size: 2em; width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; }
+        .sensor-icon.us   { background: rgba(56,189,248,.15); }
+        .sensor-icon.dht  { background: rgba(255,149,0,.15); }
+        .sensor-icon.ir   { background: rgba(192,38,211,.15); }
+        .sensor-val { font-size: 1.6em; font-weight: 800; }
+        .sensor-val.us   { color: #0284c7; }
+        .sensor-val.dht  { color: #b35e00; }
+        .sensor-val.ir   { color: var(--purple); }
+        .sensor-label { font-size: .78em; color: var(--text-gray); font-weight: 600; margin-top: 2px; }
+
+        /* Switch widget */
+        .switch { position: relative; display: inline-block; width: 64px; height: 34px; margin: 12px 0; }
         .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: #e0c8ff; transition: .4s; border-radius: 40px; }
-        .slider:before { position: absolute; content: ""; height: 33px; width: 33px; left: 3px; bottom: 3px; background: white; transition: .4s; border-radius: 50%; }
-        input:checked + .slider { background: linear-gradient(90deg,#ff2d95,#c026d3); }
-        input:checked + .slider:before { transform: translateX(35px); }
-        .terminal-section { background: rgba(45,27,58,0.9); border-radius: 28px; padding: 32px; margin-top: 40px; }
-        .log-panel { height: 240px; overflow-y: auto; font-family: monospace; background: rgba(0,0,0,0.45); border-radius: 18px; padding: 20px; color: #e0d4ff; font-size: 14px; }
+        .slider { position: absolute; cursor: pointer; inset: 0; background: #e0c8f0; transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 26px; width: 26px; left: 4px; bottom: 4px; background: white; transition: .4s; border-radius: 50%; box-shadow: 0 2px 5px rgba(0,0,0,.2); }
+        input:checked + .slider { background: linear-gradient(90deg, var(--pink), var(--purple)); }
+        input:checked + .slider:before { transform: translateX(30px); }
+
+        /* Lampu Cards */
+        .lampu-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 28px; }
+        .lampu-card {
+            background: var(--glass-card); border-radius: 20px; padding: 22px;
+            border: 1px solid rgba(255,255,255,.95); text-align: center;
+            transition: all .3s; position: relative;
+        }
+        .lampu-card.on  { box-shadow: 0 8px 30px rgba(255,200,50,.35); border-color: rgba(255,200,50,.5); }
+        .lampu-card.off { box-shadow: 0 4px 15px rgba(0,0,0,.05); }
+        .lampu-icon { font-size: 2.8em; margin-bottom: 8px; transition: all .3s; }
+        .lampu-icon.on  { filter: drop-shadow(0 0 10px rgba(255,200,50,.8)); }
+        .lampu-icon.off { filter: grayscale(1) opacity(.4); }
+        .lampu-name  { font-weight: 700; font-size: .95em; color: var(--text-dark); margin-bottom: 4px; }
+        .lampu-sensor { font-size: .75em; color: var(--text-gray); margin-bottom: 12px; }
+        .lampu-status { font-weight: 800; font-size: 1em; }
+        .lampu-status.on  { color: #d4a000; }
+        .lampu-status.off { color: var(--text-gray); }
+        .manual-switch-row { margin-top: 12px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .manual-label { font-size: .8em; color: var(--text-gray); font-weight: 600; }
+
+        /* Terminal */
+        .terminal { background: rgba(45,27,58,.92); border-radius: 28px; padding: 28px; margin-top: 36px; }
+        .terminal-hdr { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+        .log-panel {
+            height: 200px; overflow-y: auto; font-family: 'Courier New', monospace;
+            background: rgba(0,0,0,.4); border-radius: 14px; padding: 16px;
+            color: #e0d0ff; font-size: 13px;
+        }
+        .log-panel::-webkit-scrollbar { width: 5px; }
+        .log-panel::-webkit-scrollbar-thumb { background: var(--pink); border-radius: 5px; }
+        .log-line { margin-bottom: 4px; border-bottom: 1px solid rgba(255,255,255,.04); padding-bottom: 3px; }
+        .log-time { color: #b090d0; margin-right: 8px; font-size: .87em; }
+
+        @media (max-width: 768px) {
+            .grid-2, .sensor-summary, .lampu-grid { grid-template-columns: 1fr; }
+            .container { padding: 24px 16px; }
+            h1 { font-size: 2.2em; }
+            .status-wrap { transform: scale(.82); transform-origin: top right; }
+        }
     </style>
 </head>
 <body>
-    <div class="status-container">
-        <div class="status-badge" id="status-bt"><i class="fab fa-bluetooth-b"></i> BT Offline</div>
-        <div class="status-badge" id="status-fb"><i class="fas fa-cloud"></i> DB Offline</div>
-    </div>
 
-    <div class="container">
-        <h1>SmartHome</h1>
-        
-        <div class="grid-2">
-            <div class="section">
-                <h2><i class="fas fa-cloud" style="color:#ff2d95"></i> Cloud Sync</h2>
-                <div style="display: grid; grid-template-columns: 1fr; gap: 18px;">
-                    <div><label>Firebase API Key</label><input type="password" id="fb-apiKey" placeholder="AIzaSy..."></div>
-                    <div><label>Database URL</label><input type="text" id="fb-dbUrl" placeholder="https://..."></div>
-                    <div><label>Node Path</label><input type="text" id="fb-path" value="iot/kelas8"></div>
-                </div>
-                <button id="btn-connect-fb" style="width:100%; margin-top: 22px;">Hubungkan Firebase</button>
-            </div>
-            <div class="section">
-                <h2><i class="fas fa-microchip" style="color:#ff2d95"></i> Hardware Link</h2>
-                <p style="margin-bottom: 20px; font-size: 0.9em;">Pastikan Micro:bit menyala dan ekstensi Bluetooth UART aktif.</p>
-                <button id="btn-connect-ble" style="background:var(--accent-pink); width:100%;"><i class="fab fa-bluetooth"></i> Connect Micro:bit</button>
-                <button id="btn-disconnect-ble" disabled style="width:100%; margin-top:10px;">Disconnect</button>
-            </div>
+<div class="status-wrap">
+    <div class="badge" id="status-bt"><i class="fab fa-bluetooth-b"></i> BT Offline</div>
+    <div class="badge" id="status-fb"><i class="fas fa-cloud"></i> DB Offline</div>
+</div>
+
+<div class="container">
+    <h1>🏠 SmartHome IoT</h1>
+
+    <!-- Config Row -->
+    <div class="grid-2">
+        <div class="section">
+            <h2><i class="fas fa-cloud" style="color:var(--pink)"></i> Cloud Sync (Firebase)</h2>
+            <label>API Key</label>
+            <input type="password" id="fb-apiKey" placeholder="AIzaSy...">
+            <label>Database URL</label>
+            <input type="text" id="fb-dbUrl" placeholder="https://project-rtdb.firebaseio.com">
+            <label>Node Path</label>
+            <input type="text" id="fb-path" value="smarthome/ruangan1" style="margin-bottom:0;">
+            <button id="btn-connect-fb" style="width:100%; margin-top:16px;">
+                <i class="fas fa-link"></i> Hubungkan Firebase
+            </button>
         </div>
 
-        <div id="dashboard-area" style="display:none; margin-top:40px;">
-            <h3 class="section-title"><i class="fas fa-chart-area"></i> Telemetry Sensors</h3>
-            <div id="sensorGrid" class="grid-3" style="margin-bottom:30px;"></div>
-            
-            <div class="grid-2">
-                <div>
-                    <h3 class="section-title"><i class="fas fa-toggle-on"></i> Digital Switches</h3>
-                    <div id="switchGrid" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:20px;"></div>
-                </div>
+        <div class="section">
+            <h2><i class="fas fa-microchip" style="color:var(--pink)"></i> Hardware Link (Micro:bit)</h2>
+            <p style="font-size:.87em; color:var(--text-gray); line-height:1.7; margin-bottom:20px;">
+                Pastikan Micro:bit menyala dan ekstensi <strong>Bluetooth UART</strong> aktif di MakeCode.<br>
+                RX dari Micro:bit: <code style="color:var(--pink);">key:value</code><br>
+                TX ke Micro:bit: <code style="color:var(--pink);">key,value↵</code>
+            </p>
+            <div style="display:flex; gap:10px; flex-direction:column;">
+                <button id="btn-connect-ble"><i class="fab fa-bluetooth"></i> Connect Micro:bit</button>
+                <button class="btn-dark" id="btn-disconnect-ble" disabled>
+                    <i class="fas fa-times"></i> Disconnect
+                </button>
             </div>
-        </div>
-
-        <div class="terminal-section">
-            <div class="terminal-header" style="display:flex; justify-content:space-between; color:white; margin-bottom:15px;">
-                <h2 style="margin:0;"><i class="fas fa-terminal"></i> System Terminal</h2>
-                <button id="btnClearLog">Clear</button>
-            </div>
-            <div id="terminalLog" class="log-panel"></div>
         </div>
     </div>
 
-    <script type="module">
-        import { initializeApp, getApps, deleteApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-        import { getDatabase, ref, onValue, update, set } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
+    <!-- Mode Banner -->
+    <div class="mode-banner" id="modeBanner">
+        <div class="mode-info">
+            <h3>🤖 Mode Sistem</h3>
+            <p>Otomatis: lampu dikontrol sensor. Manual: kontrol via switch di bawah.</p>
+        </div>
+        <div style="display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+            <div class="mode-badge auto" id="modeBadge">
+                <i class="fas fa-robot"></i> OTOMATIS
+            </div>
+            <button class="mode-btn btn-dark" id="btnToggleMode">
+                <i class="fas fa-hand-paper"></i> Ke Mode Manual
+            </button>
+        </div>
+    </div>
 
-        const state = {
-            db: null, currentPath: "", unsubscribe: null, currentData: {}, historyData: {},
-            device: null, txChar: null, rxChar: null, bleConnected: false, bleBuffer: "",
-            charts: {}
+    <!-- Sensor Summary -->
+    <h3 class="sec"><i class="fas fa-satellite-dish"></i> Live Sensor Data</h3>
+    <div class="sensor-summary">
+        <div class="sensor-card">
+            <div class="sensor-icon us">📡</div>
+            <div>
+                <div class="sensor-val us" id="val-jarak">-- <span style="font-size:.5em">cm</span></div>
+                <div class="sensor-label">Ultrasonik · P0/P1</div>
+                <div style="font-size:.72em; color:var(--text-gray);">Lampu 1 nyala jika &lt; 10 cm</div>
+            </div>
+        </div>
+        <div class="sensor-card">
+            <div class="sensor-icon dht">🌡️</div>
+            <div>
+                <div class="sensor-val dht" id="val-suhu">-- <span style="font-size:.5em">°C</span></div>
+                <div class="sensor-label">DHT11 · P4</div>
+                <div style="font-size:.72em; color:var(--text-gray);">Lampu 2 nyala jika &gt; 35°C</div>
+            </div>
+        </div>
+        <div class="sensor-card">
+            <div class="sensor-icon ir">👁️</div>
+            <div>
+                <div class="sensor-val ir" id="val-infrared">--</div>
+                <div class="sensor-label">Infrared · P3</div>
+                <div style="font-size:.72em; color:var(--text-gray);">Lampu 3 nyala jika &gt; 900</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lampu Cards -->
+    <h3 class="sec"><i class="fas fa-lightbulb"></i> Kontrol Lampu</h3>
+    <div class="lampu-grid">
+        <!-- Lampu 1 -->
+        <div class="lampu-card off" id="card-lampu1">
+            <div class="lampu-icon off" id="icon-lampu1">💡</div>
+            <div class="lampu-name">Lampu 1</div>
+            <div class="lampu-sensor">📡 Ultrasonik (P13)</div>
+            <div class="lampu-status off" id="lbl-lampu1">OFF</div>
+            <div class="manual-switch-row" id="manual-lampu1" style="display:none;">
+                <span class="manual-label">Manual:</span>
+                <label class="switch">
+                    <input type="checkbox" id="sw-lampu1"
+                        onchange="window.toggleLampu('lampu1', this.checked)">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+        <!-- Lampu 2 -->
+        <div class="lampu-card off" id="card-lampu2">
+            <div class="lampu-icon off" id="icon-lampu2">💡</div>
+            <div class="lampu-name">Lampu 2</div>
+            <div class="lampu-sensor">🌡️ DHT11 (P14)</div>
+            <div class="lampu-status off" id="lbl-lampu2">OFF</div>
+            <div class="manual-switch-row" id="manual-lampu2" style="display:none;">
+                <span class="manual-label">Manual:</span>
+                <label class="switch">
+                    <input type="checkbox" id="sw-lampu2"
+                        onchange="window.toggleLampu('lampu2', this.checked)">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+        <!-- Lampu 3 -->
+        <div class="lampu-card off" id="card-lampu3">
+            <div class="lampu-icon off" id="icon-lampu3">💡</div>
+            <div class="lampu-name">Lampu 3</div>
+            <div class="lampu-sensor">👁️ Infrared (P15)</div>
+            <div class="lampu-status off" id="lbl-lampu3">OFF</div>
+            <div class="manual-switch-row" id="manual-lampu3" style="display:none;">
+                <span class="manual-label">Manual:</span>
+                <label class="switch">
+                    <input type="checkbox" id="sw-lampu3"
+                        onchange="window.toggleLampu('lampu3', this.checked)">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chart History -->
+    <h3 class="sec"><i class="fas fa-chart-line"></i> Grafik Sensor</h3>
+    <div class="grid-3" style="margin-bottom:28px;">
+        <div class="widget-card">
+            <div class="widget-title">Jarak <span class="widget-unit">cm</span></div>
+            <div class="chart-wrap"><canvas id="chart-jarak"></canvas></div>
+        </div>
+        <div class="widget-card">
+            <div class="widget-title">Suhu <span class="widget-unit">°C</span></div>
+            <div class="chart-wrap"><canvas id="chart-suhu"></canvas></div>
+        </div>
+        <div class="widget-card">
+            <div class="widget-title">Infrared</div>
+            <div class="chart-wrap"><canvas id="chart-infrared"></canvas></div>
+        </div>
+    </div>
+
+    <!-- Terminal -->
+    <div class="terminal">
+        <div class="terminal-hdr">
+            <h2 style="color:#fff; margin:0;"><i class="fas fa-terminal"></i> System Terminal</h2>
+            <button id="btnClearLog" style="background:rgba(255,255,255,.1); padding:8px 14px; font-size:.8em;">
+                <i class="fas fa-trash"></i> Clear
+            </button>
+        </div>
+        <div id="terminalLog" class="log-panel"></div>
+    </div>
+</div>
+
+<script type="module">
+import { initializeApp, getApps, deleteApp }   from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+import { getDatabase, ref, onValue, update, set } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
+
+// =====================================================================
+// STATE
+// =====================================================================
+const state = {
+    db: null, path: "", unsub: null, data: {},
+    device: null, txChar: null, rxChar: null,
+    bleConnected: false, bleBuffer: "",
+    modeOtomatis: 1,   // 1 = otomatis, 0 = manual
+    charts: {},
+    history: {
+        jarak:    { labels: [], data: [] },
+        suhu:     { labels: [], data: [] },
+        infrared: { labels: [], data: [] }
+    }
+};
+
+const MAX_PTS = 25;
+const $ = id => document.getElementById(id);
+const KEYS_SENSOR = ["jarak", "suhu", "infrared"];
+const KEYS_LAMPU  = ["lampu1", "lampu2", "lampu3"];
+
+// =====================================================================
+// LOGGER
+// =====================================================================
+function log(msg, color = "#c0a0e0") {
+    const t = new Date().toLocaleTimeString('id-ID', { hour12: false });
+    $('terminalLog').insertAdjacentHTML('afterbegin',
+        `<div class="log-line"><span class="log-time">[${t}]</span> <span style="color:${color}">${msg}</span></div>`);
+}
+
+// =====================================================================
+// STATUS UI
+// =====================================================================
+function updateBTStatus() {
+    $('btn-connect-ble').disabled    = state.bleConnected;
+    $('btn-disconnect-ble').disabled = !state.bleConnected;
+    const b = $('status-bt');
+    b.innerHTML = state.bleConnected
+        ? '<i class="fab fa-bluetooth-b"></i> BT Connected'
+        : '<i class="fab fa-bluetooth-b"></i> BT Offline';
+    b.style.color = state.bleConnected ? 'var(--success)' : 'var(--text-gray)';
+}
+
+function updateDBStatus(ok) {
+    const b = $('status-fb');
+    b.innerHTML = ok
+        ? '<i class="fas fa-cloud"></i> DB Synced'
+        : '<i class="fas fa-cloud"></i> DB Offline';
+    b.style.color = ok ? 'var(--success)' : 'var(--text-gray)';
+}
+
+// =====================================================================
+// MODE OTOMATIS / MANUAL
+// =====================================================================
+function applyMode(isAuto) {
+    state.modeOtomatis = isAuto ? 1 : 0;
+    const badge  = $('modeBadge');
+    const btnTgl = $('btnToggleMode');
+
+    if (isAuto) {
+        badge.className = 'mode-badge auto';
+        badge.innerHTML = '<i class="fas fa-robot"></i> OTOMATIS';
+        btnTgl.innerHTML = '<i class="fas fa-hand-paper"></i> Ke Mode Manual';
+        // Sembunyikan switch manual
+        KEYS_LAMPU.forEach(k => { $(`manual-${k}`).style.display = 'none'; });
+    } else {
+        badge.className = 'mode-badge manual';
+        badge.innerHTML = '<i class="fas fa-hand-paper"></i> MANUAL';
+        btnTgl.innerHTML = '<i class="fas fa-robot"></i> Ke Mode Otomatis';
+        // Tampilkan switch manual
+        KEYS_LAMPU.forEach(k => { $(`manual-${k}`).style.display = 'flex'; });
+    }
+
+    // Kirim ke micro:bit
+    sendBLE("mode", isAuto ? 1 : 0);
+    // Update Firebase
+    if (state.db) {
+        update(ref(state.db, `${state.path}/mode`), { value: isAuto ? 1 : 0 });
+    }
+    log(`Mode → ${isAuto ? 'OTOMATIS' : 'MANUAL'}`, isAuto ? '#34c759' : '#ffaa00');
+}
+
+$('btnToggleMode').onclick = () => applyMode(state.modeOtomatis === 0);
+
+// =====================================================================
+// LAMPU UI UPDATE
+// =====================================================================
+function updateLampuUI(key, isOn) {
+    const card = $(`card-${key}`);
+    const icon = $(`icon-${key}`);
+    const lbl  = $(`lbl-${key}`);
+    const sw   = $(`sw-${key}`);
+    if (!card) return;
+
+    card.className = `lampu-card ${isOn ? 'on' : 'off'}`;
+    icon.className = `lampu-icon ${isOn ? 'on' : 'off'}`;
+    lbl.className  = `lampu-status ${isOn ? 'on' : 'off'}`;
+    lbl.innerText  = isOn ? 'ON ✓' : 'OFF';
+    if (sw && document.activeElement !== sw) sw.checked = isOn;
+}
+
+// =====================================================================
+// SENSOR UI UPDATE
+// =====================================================================
+function updateSensorUI(key, val) {
+    const el = $(`val-${key}`);
+    if (!el) return;
+    const unit = key === 'jarak' ? ' <span style="font-size:.5em">cm</span>'
+               : key === 'suhu'  ? ' <span style="font-size:.5em">°C</span>'
+               : '';
+    el.innerHTML = `${val}${unit}`;
+}
+
+// =====================================================================
+// BLUETOOTH
+// =====================================================================
+const SVC = "6e400001-b5a3-f393-e0a9-e50e24dcca9e";
+const TX  = "6e400002-b5a3-f393-e0a9-e50e24dcca9e";
+const RX  = "6e400003-b5a3-f393-e0a9-e50e24dcca9e";
+
+async function connectBLE() {
+    try {
+        if (!navigator.bluetooth) throw new Error("Browser tidak mendukung Web Bluetooth.");
+        log("Scanning Micro:bit...", "#ffaa00");
+        state.device = await navigator.bluetooth.requestDevice({
+            filters: [{ namePrefix: "BBC micro:bit" }],
+            optionalServices: [SVC]
+        });
+        state.device.addEventListener("gattserverdisconnected", () => {
+            state.bleConnected = false; updateBTStatus();
+            log("BLE Terputus!", "#ff4444");
+        });
+        const server  = await state.device.gatt.connect();
+        const service = await server.getPrimaryService(SVC);
+        state.txChar  = await service.getCharacteristic(TX);
+        state.rxChar  = await service.getCharacteristic(RX);
+        await state.txChar.startNotifications();
+        state.txChar.addEventListener("characteristicvaluechanged", onBLEData);
+        state.bleConnected = true; updateBTStatus();
+        log(`Terhubung: ${state.device.name}`, "#34c759");
+    } catch (e) { log(`BLE Error: ${e.message}`, "#ff4444"); }
+}
+
+function onBLEData(event) {
+    let arr = [];
+    for (let i = 0; i < event.target.value.byteLength; i++)
+        arr.push(event.target.value.getUint8(i));
+    state.bleBuffer += String.fromCharCode.apply(null, arr);
+    const lines = state.bleBuffer.split('\n');
+    state.bleBuffer = lines.pop() || "";
+    lines.forEach(line => { const t = line.trim(); if (t) processBLELine(t); });
+}
+
+// =====================================================================
+// PROSES DATA DARI MICRO:BIT
+// Format: "key:value"
+// Key yang dikenal: jarak, suhu, infrared, lampu1, lampu2, lampu3, mode
+// =====================================================================
+function processBLELine(txt) {
+    log(`RX ← ${txt}`, "#aa66ff");
+    if (!txt.includes(':')) return;
+
+    const idx = txt.indexOf(':');
+    const key = txt.substring(0, idx).trim().toLowerCase().replace(/\s+/g, '_');
+    const val = parseFloat(txt.substring(idx + 1).trim());
+    if (isNaN(val)) return;
+
+    // Update mode state dari micro:bit
+    if (key === "mode") {
+        state.modeOtomatis = val;
+        applyMode(val === 1);
+        return;
+    }
+
+    // Sensor readings → update UI + chart + Firebase
+    if (KEYS_SENSOR.includes(key)) {
+        updateSensorUI(key, val);
+        pushHistory(key, val);
+        if (state.db) update(ref(state.db, `${state.path}/${key}`), { value: val, tipe: 'sensor' });
+        return;
+    }
+
+    // Lampu status dari micro:bit → update UI + Firebase
+    if (KEYS_LAMPU.includes(key)) {
+        updateLampuUI(key, val === 1);
+        if (state.db) update(ref(state.db, `${state.path}/${key}`), { value: val, tipe: 'switch' });
+        return;
+    }
+}
+
+// Format TX ke Micro:bit: "key,value\n"  (pakai KOMA)
+async function sendBLE(key, val) {
+    if (!state.rxChar) return;
+    const payload = `${key},${val}\n`;
+    try {
+        await state.rxChar.writeValue(new TextEncoder().encode(payload));
+        log(`TX → ${payload.trim()}`, "#ffcc00");
+    } catch (e) { log(`TX Error: ${e.message}`, "#ff4444"); }
+}
+
+// =====================================================================
+// KONTROL LAMPU (dari web → micro:bit + Firebase)
+// =====================================================================
+window.toggleLampu = (key, isChecked) => {
+    if (state.modeOtomatis === 1) return; // Hanya di mode manual
+    const val = isChecked ? 1 : 0;
+    updateLampuUI(key, isChecked);
+    sendBLE(key, val);
+    if (state.db) update(ref(state.db, `${state.path}/${key}`), { value: val });
+    log(`${key} → ${isChecked ? 'ON' : 'OFF'}`, "#ffaa00");
+};
+
+// =====================================================================
+// FIREBASE
+// =====================================================================
+async function connectFirebase() {
+    const apiKey = $('fb-apiKey').value.trim();
+    const dbUrl  = $('fb-dbUrl').value.trim();
+    const path   = $('fb-path').value.trim() || "smarthome/ruangan1";
+    if (!apiKey || !dbUrl) { alert("Isi API Key dan Database URL!"); return; }
+
+    try {
+        const apps = getApps();
+        if (apps.length > 0) await deleteApp(apps[0]);
+        if (state.unsub) state.unsub();
+
+        const app = initializeApp({
+            apiKey, databaseURL: dbUrl,
+            projectId: dbUrl.replace("https://","").split(".")[0]
+        });
+        state.db   = getDatabase(app);
+        state.path = path;
+        log(`Menghubungkan → /${path}`, "#ffaa00");
+
+        // Inisialisasi node di Firebase jika belum ada
+        const initData = {
+            jarak:    { tipe: 'sensor', value: 0, satuan: 'cm' },
+            suhu:     { tipe: 'sensor', value: 0, satuan: '°C' },
+            infrared: { tipe: 'sensor', value: 0, satuan: '' },
+            lampu1:   { tipe: 'switch', value: 0 },
+            lampu2:   { tipe: 'switch', value: 0 },
+            lampu3:   { tipe: 'switch', value: 0 },
+            mode:     { tipe: 'switch', value: 1 }
         };
-        const MAX_CHART_POINTS = 20;
-        const $ = id => document.getElementById(id);
 
-        function logMsg(msg, color = "#a1a1a6") {
-            const time = new Date().toLocaleTimeString('id-ID', { hour12: false });
-            const html = `<div class="log-line"><span class="log-time">[${time}]</span> <span style="color:${color}">${msg}</span></div>`;
-            $('terminalLog').insertAdjacentHTML('afterbegin', html);
-        }
-
-        function updateStatusUI() {
-            $('btn-connect-ble').disabled = state.bleConnected;
-            $('btn-disconnect-ble').disabled = !state.bleConnected;
-            const b = $('status-bt');
-            if (state.bleConnected) {
-                b.innerHTML = '<i class="fab fa-bluetooth-b"></i> BT Connected';
-                b.style.color = 'var(--success)';
-            } else {
-                b.innerHTML = '<i class="fab fa-bluetooth-b"></i> BT Offline';
-                b.style.color = 'var(--text-gray)';
+        state.unsub = onValue(ref(state.db, path), (snap) => {
+            const d = snap.val();
+            if (!d) {
+                // Buat struktur awal
+                set(ref(state.db, path), initData);
+                return;
             }
-        }
+            state.data = d;
+            updateDBStatus(true);
 
-        function updateDBStatusUI(connected) {
-            const b = $('status-fb');
-            if (connected) {
-                b.innerHTML = '<i class="fas fa-cloud"></i> DB Synced';
-                b.style.color = 'var(--success)';
-            } else {
-                b.innerHTML = '<i class="fas fa-cloud"></i> DB Offline';
-                b.style.color = 'var(--text-gray)';
+            // Sync semua key dari Firebase ke UI
+            KEYS_SENSOR.forEach(k => {
+                if (d[k]) updateSensorUI(k, d[k].value ?? 0);
+            });
+            KEYS_LAMPU.forEach(k => {
+                if (d[k]) updateLampuUI(k, (d[k].value ?? 0) === 1);
+            });
+            if (d.mode) {
+                state.modeOtomatis = d.mode.value ?? 1;
+                applyMode(state.modeOtomatis === 1);
             }
-        }
+        }, err => { log(`DB Error: ${err.message}`, "#ff4444"); updateDBStatus(false); });
 
-        // ==================== BLUETOOTH ====================
-        const UART_SERVICE_UUID = "6e400001-b5a3-f393-e0a9-e50e24dcca9e";
-        const UART_TX_UUID = "6e400002-b5a3-f393-e0a9-e50e24dcca9e";
-        const UART_RX_UUID = "6e400003-b5a3-f393-e0a9-e50e24dcca9e";
+        log(`Firebase OK: /${path}`, "#34c759");
+        localStorage.setItem('smarthome_cfg', JSON.stringify({ apiKey, dbUrl, path }));
+    } catch (e) { log(`DB Error: ${e.message}`, "#ff4444"); updateDBStatus(false); }
+}
 
-        async function connectBLE() {
-            try {
-                state.device = await navigator.bluetooth.requestDevice({
-                    filters: [{ namePrefix: "BBC micro:bit" }],
-                    optionalServices: [UART_SERVICE_UUID]
-                });
-                const server = await state.device.gatt.connect();
-                const service = await server.getPrimaryService(UART_SERVICE_UUID);
-                state.txChar = await service.getCharacteristic(UART_TX_UUID);
-                state.rxChar = await service.getCharacteristic(UART_RX_UUID);
-                await state.txChar.startNotifications();
-                state.txChar.addEventListener("characteristicvaluechanged", handleBLEData);
-                state.bleConnected = true;
-                updateStatusUI();
-                logMsg("Terhubung ke Micro:bit ✓", "var(--success)");
-            } catch (e) { logMsg("BLE Error: " + e.message, "var(--danger)"); }
-        }
+// =====================================================================
+// CHART
+// =====================================================================
+function pushHistory(key, val) {
+    const h = state.history[key];
+    if (!h) return;
+    const label = new Date().toLocaleTimeString();
+    h.labels.push(label); h.data.push(val);
+    if (h.labels.length > MAX_PTS) { h.labels.shift(); h.data.shift(); }
+    if (state.charts[key]) {
+        state.charts[key].data.labels              = h.labels;
+        state.charts[key].data.datasets[0].data   = h.data;
+        state.charts[key].update('none');
+    }
+}
 
-        function handleBLEData(event) {
-            let arr = [];
-            for (let i = 0; i < event.target.value.byteLength; i++) arr.push(event.target.value.getUint8(i));
-            state.bleBuffer += String.fromCharCode.apply(null, arr);
-            const lines = state.bleBuffer.split('\n');
-            state.bleBuffer = lines.pop() || "";
-            lines.forEach(line => { if (line.trim()) processIncomingSensor(line.trim()); });
-        }
+function initCharts() {
+    const colors = { jarak: '#0284c7', suhu: '#b35e00', infrared: '#c026d3' };
+    KEYS_SENSOR.forEach(key => {
+        const canvas = $(`chart-${key}`);
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        const color = colors[key];
+        const grad = ctx.createLinearGradient(0, 0, 0, 90);
+        grad.addColorStop(0, color + '55');
+        grad.addColorStop(1, color + '00');
 
-        function processIncomingSensor(txt) {
-            logMsg(`RX < ${txt}`, "#ff2d95");
-            if (!state.db || !txt.includes(':')) return;
-            const [keyRaw, valRaw] = txt.split(':');
-            const key = keyRaw.trim().toLowerCase();
-            const val = parseFloat(valRaw.trim());
-
-            if (isNaN(val)) return;
-
-            if (state.currentData[key]) {
-                update(ref(state.db, `${state.currentPath}/${key}`), { value: val });
-            } else {
-                const tipe = (key === "lampu" || key === "lampu2" || key === "lampu3" || key === "mode") ? "switch" : "sensor";
-                logMsg(`Auto-create ${tipe}: ${key}`, "var(--warning)");
-                set(ref(state.db, `${state.currentPath}/${key}`), {
-                    tipe: tipe,
-                    value: val,
-                    satuan: key === "suhu" ? "°C" : ""
-                });
+        state.charts[key] = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: state.history[key].labels,
+                datasets: [{ data: state.history[key].data, borderColor: color, backgroundColor: grad, borderWidth: 2.5, pointRadius: 0, fill: true, tension: 0.4 }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { display: false }, tooltip: { enabled: false } },
+                scales: { y: { display: false }, x: { display: false } },
+                animation: { duration: 300 }
             }
-        }
+        });
+    });
+}
 
-        async function sendToMicrobit(key, val) {
-            if (!state.rxChar) return logMsg("BLE belum terhubung!", "var(--danger)");
-            const payload = `${key}:${val}\n`;
-            await state.rxChar.writeValue(new TextEncoder().encode(payload));
-            logMsg(`TX > ${payload.trim()}`, "#ff9500");
-        }
+// =====================================================================
+// EVENT LISTENERS & INIT
+// =====================================================================
+$('btn-connect-ble').onclick    = connectBLE;
+$('btn-disconnect-ble').onclick = () => { if (state.device) state.device.gatt.disconnect(); };
+$('btn-connect-fb').onclick     = connectFirebase;
+$('btnClearLog').onclick        = () => $('terminalLog').innerHTML = '';
 
-        // ==================== FIREBASE ====================
-        async function connectFirebase() {
-            const apiKey = $('fb-apiKey').value.trim();
-            const dbUrl = $('fb-dbUrl').value.trim();
-            const path = $('fb-path').value.trim() || "iot/kelas8";
-            if (!apiKey || !dbUrl) return alert("Lengkapi Firebase config!");
-
-            try {
-                const config = { apiKey, databaseURL: dbUrl };
-                if (getApps().length > 0) await deleteApp(getApps()[0]);
-                const app = initializeApp(config);
-                state.db = getDatabase(app);
-                state.currentPath = path;
-
-                if (state.unsubscribe) state.unsubscribe();
-                state.unsubscribe = onValue(ref(state.db, path), snap => {
-                    state.currentData = snap.val() || {};
-                    renderDashboard(state.currentData);
-                    updateDBStatusUI(true);
-                });
-                logMsg("Firebase terhubung ✓", "var(--success)");
-            } catch (e) { logMsg("Firebase Error: " + e.message, "var(--danger)"); }
-        }
-
-        // ==================== DASHBOARD RENDER ====================
-        function renderDashboard(data) {
-            if (Object.keys(data).length === 0) return;
-            $('dashboard-area').style.display = 'block';
-            renderSensors(data);
-            renderSwitches(data);
-        }
-
-        function renderSensors(data) {
-            const grid = $('sensorGrid');
-            const sensorKeys = Object.keys(data).filter(k => data[k].tipe === 'sensor');
-            sensorKeys.forEach(key => {
-                let card = $(`card-${key}`);
-                if (!card) {
-                    const html = `
-                        <div class="widget-card" id="card-${key}">
-                            <h3 class="widget-title">${key.toUpperCase()}</h3>
-                            <div class="widget-value" id="val-${key}">${data[key].value}</div>
-                            <div class="chart-container"><canvas id="chart-${key}"></canvas></div>
-                        </div>`;
-                    grid.insertAdjacentHTML('beforeend', html);
-                    initChart(key);
-                } else {
-                    $(`val-${key}`).textContent = data[key].value;
-                    updateChart(key, data[key].value);
-                }
-            });
-        }
-
-        function renderSwitches(data) {
-            const grid = $('switchGrid');
-            const switchKeys = Object.keys(data).filter(k => data[k].tipe === 'switch');
-            switchKeys.forEach(key => {
-                const isOn = data[key].value == 1;
-                let card = $(`sw-${key}`);
-                if (!card) {
-                    const html = `
-                        <div class="widget-card" id="sw-${key}" style="text-align:center;">
-                            <h3 class="widget-title">${key.toUpperCase()}</h3>
-                            <label class="switch">
-                                <input type="checkbox" id="toggle-${key}" ${isOn?'checked':''} onchange="window.toggle('${key}', this.checked)">
-                                <span class="slider"></span>
-                            </label>
-                        </div>`;
-                    grid.insertAdjacentHTML('beforeend', html);
-                } else {
-                    $(`toggle-${key}`).checked = isOn;
-                }
-            });
-        }
-
-        function initChart(key) {
-            if (!state.historyData) state.historyData = {};
-            if (!state.historyData[key]) state.historyData[key] = { labels: [], data: [] };
-            const ctx = $(`chart-${key}`).getContext('2d');
-            state.charts[key] = new Chart(ctx, {
-                type: 'line',
-                data: { labels: [], datasets: [{ data: [], borderColor: '#ff2d95', borderWidth: 3, tension: 0.4, fill: false }] },
-                options: { responsive: true, plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { display: true } } }
-            });
-        }
-
-        function updateChart(key, value) {
-            if (!state.charts[key]) return;
-            const h = state.historyData[key];
-            h.labels.push(new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'}));
-            h.data.push(value);
-            if (h.labels.length > MAX_CHART_POINTS) { h.labels.shift(); h.data.shift(); }
-            state.charts[key].data.labels = h.labels;
-            state.charts[key].data.datasets[0].data = h.data;
-            state.charts[key].update('none');
-        }
-
-        window.toggle = (key, checked) => {
-            const val = checked ? 1 : 0;
-            if (state.db) update(ref(state.db, `${state.currentPath}/${key}`), { value: val });
-            sendToMicrobit(key, val);
-        };
-
-        // ==================== EVENT LISTENERS ====================
-        $('btn-connect-ble').onclick = connectBLE;
-        $('btn-disconnect-ble').onclick = () => state.device && state.device.gatt.disconnect();
-        $('btn-connect-fb').onclick = connectFirebase;
-        $('btnClearLog').onclick = () => $('terminalLog').innerHTML = '';
-
-        window.onload = () => {
-            logMsg("SmartHome siap. Hubungkan Bluetooth & Firebase.", "#888");
-        };
-    </script>
+window.onload = () => {
+    initCharts();
+    applyMode(true); // Default otomatis
+    const saved = JSON.parse(localStorage.getItem('smarthome_cfg') || '{}');
+    if (saved.apiKey) {
+        $('fb-apiKey').value = saved.apiKey;
+        $('fb-dbUrl').value  = saved.dbUrl;
+        $('fb-path').value   = saved.path || "smarthome/ruangan1";
+    }
+    log("✓ SmartHome siap — hubungkan Firebase & Micro:bit", "#c0a0e0");
+};
+</script>
 </body>
 </html>
